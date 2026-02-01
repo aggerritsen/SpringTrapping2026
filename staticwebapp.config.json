@@ -3,9 +3,9 @@
     {
       "route": "/*",
       "allowedRoles": ["anonymous"],
-      "redirect": {
-        "destination": "https://www.springtrapping.nl{path}",
-        "statusCode": 301
+      "statusCode": 301,
+      "headers": {
+        "Location": "https://www.springtrapping.nl{path}"
       }
     }
   ]
