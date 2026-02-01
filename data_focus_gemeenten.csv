@@ -1,4 +1,4 @@
-WKT,latitude,longitude,name,description
+WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.71169 52.03336)",52.03336,4.71169,Plaswijckweg, 2804 LS, Gouda,https://waarneming.nl/observation/337664531/
 "POINT (4.4007 51.92428)",51.92428,4.40070,Johan Braakensiekstraat, 3119 NL, Schiedam,https://waarneming.nl/observation/345832820/
 "POINT (4.50901 52.06553)",52.06553,4.50901,Vuurdoornpark, 2724 HG, Zoetermeer,https://waarneming.nl/observation/347449123/

@@ -1,11 +1,69 @@
 /* SpringTrapping2026 - app.js
-   Expects ./data.csv with columns:
+   Expects CSV columns:
    WKT,latitude,longitude,street,postalcode,city,description
    - description currently holds the URL (waarneming.nl)
+
+   URL:
+   - ?dataset=focus|noord|midden|zh|zl|nb|li
 */
 
 (function () {
-  // ---------- Helpers ----------
+  // =========================================================
+  // DATASETS (keep in sync with index.html <option value="...">)
+  // =========================================================
+  const DATASETS = {
+    focus:  { label: "Focus Gemeenten",  file: "./data_focus_gemeenten.csv" },
+    noord:  { label: "Noord-Nederland",  file: "./data_noord_nederland.csv" },
+    midden: { label: "Midden-Nederland", file: "./data_midden_nederland.csv" },
+    zh:     { label: "Zuid-Holland",     file: "./data_zuid_holland.csv" },
+    zl:     { label: "Zeeland",          file: "./data_zeeland.csv" },
+    nb:     { label: "Noord-Brabant",    file: "./data_noord_brabant.csv" },
+    li:     { label: "Limburg",          file: "./data_limburg.csv" },
+  };
+
+  const DEFAULT_DATASET = "focus";
+
+  // Yellow for non-selected items (rings + marker)
+  const DIM_COLOR = "#f0c419"; // warm yellow
+
+  // =========================================================
+  // MARKER ICONS (SVG data URI)
+  // =========================================================
+  function svgMarkerDataUri(fillHex) {
+    const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="54" viewBox="0 0 34 54">
+  <path d="M17 0C7.6 0 0 7.6 0 17c0 13 17 37 17 37s17-24 17-37C34 7.6 26.4 0 17 0z" fill="${fillHex}"/>
+  <circle cx="17" cy="17" r="6.5" fill="#ffffff" fill-opacity="0.95"/>
+</svg>`.trim();
+
+    const encoded = encodeURIComponent(svg)
+      .replace(/'/g, "%27")
+      .replace(/"/g, "%22");
+
+    return `data:image/svg+xml;charset=UTF-8,${encoded}`;
+  }
+
+  const NORMAL_MARKER_COLOR = "#2a81cb"; // Leaflet-ish blue
+
+  const baseIcon = new L.Icon({
+    iconUrl: svgMarkerDataUri(NORMAL_MARKER_COLOR),
+    iconSize: [34, 54],
+    iconAnchor: [17, 54],
+    popupAnchor: [0, -50],
+    shadowUrl: null,
+  });
+
+  const dimIcon = new L.Icon({
+    iconUrl: svgMarkerDataUri(DIM_COLOR),
+    iconSize: [34, 54],
+    iconAnchor: [17, 54],
+    popupAnchor: [0, -50],
+    shadowUrl: null,
+  });
+
+  // =========================================================
+  // HELPERS
+  // =========================================================
   function safeHtml(s) {
     return String(s ?? "")
       .replaceAll("&", "&amp;")
@@ -15,7 +73,41 @@
       .replaceAll("'", "&#039;");
   }
 
-  // Robust CSV parser (handles quoted fields + commas inside quotes)
+  function normalizeSpaces(s) {
+    return String(s ?? "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function isValidUrl(url) {
+    try {
+      const u = new URL(url);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
+  function getQueryParam(name) {
+    const u = new URL(window.location.href);
+    return u.searchParams.get(name);
+  }
+
+  function setQueryParam(name, value) {
+    const u = new URL(window.location.href);
+    if (value == null || value === "") u.searchParams.delete(name);
+    else u.searchParams.set(name, value);
+    window.history.replaceState({}, "", u.toString());
+  }
+
+  function resolveDatasetKey(raw) {
+    const k = normalizeSpaces(raw || "").toLowerCase();
+    return DATASETS[k] ? k : DEFAULT_DATASET;
+  }
+
+  // =========================================================
+  // CSV PARSER
+  // =========================================================
   function parseCSV(text) {
     const rows = [];
     let row = [];
@@ -70,13 +162,9 @@
       });
   }
 
-  function normalizeSpaces(s) {
-    return String(s ?? "")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  // ---------- Map init ----------
+  // =========================================================
+  // MAP INIT
+  // =========================================================
   const map = L.map("map", { preferCanvas: true });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -84,22 +172,32 @@
     attribution: "&copy; OpenStreetMap contributors",
   }).addTo(map);
 
+  map.setView([52.1, 5.1], 8); // NL default
+
   const layer = L.featureGroup().addTo(map);
 
-  // Rings: 100/200/300m
+  setTimeout(() => {
+    try { map.invalidateSize(true); } catch (_) {}
+  }, 0);
+
+  window.addEventListener("resize", () => {
+    try { map.invalidateSize(false); } catch (_) {}
+  });
+
   const RINGS = [
-    { radius: 100, color: "red", fillOpacity: 0.12, weight: 2 },
+    { radius: 100, color: "red",   fillOpacity: 0.12, weight: 2 },
     { radius: 200, color: "green", fillOpacity: 0.10, weight: 2 },
-    { radius: 300, color: "blue", fillOpacity: 0.08, weight: 2 },
+    { radius: 300, color: "blue",  fillOpacity: 0.08, weight: 2 },
   ];
 
-  // Store all items for filtering + sidebar
-  // items: { data:{...}, marker, rings:[circle,circle,circle] }
-  let items = [];
+  // =========================================================
+  // STATE + UI
+  // =========================================================
+  let items = []; // { data, marker, rings[] }
 
-  // ---------- UI elements (optional) ----------
   const listEl = document.getElementById("list");
   const filterEl = document.getElementById("filter");
+  const datasetEl = document.getElementById("datasetSelect");
 
   function buildAddress(d) {
     const street = normalizeSpaces(d.street || "");
@@ -112,20 +210,28 @@
     return parts.join(", ");
   }
 
-  function isValidUrl(url) {
-    try {
-      const u = new URL(url);
-      return u.protocol === "http:" || u.protocol === "https:";
-    } catch {
-      return false;
+  function safeOpenPopup(item) {
+    if (!item || !item.marker) return;
+
+    if (!item.marker._map) {
+      try { item.marker.addTo(layer); } catch (_) {}
     }
+
+    map.whenReady(() => {
+      try { map.invalidateSize(false); } catch (_) {}
+      setTimeout(() => {
+        try { item.marker.openPopup(); } catch (_) {}
+      }, 0);
+    });
   }
 
   function renderList(listItems) {
     if (!listEl) return;
     listEl.innerHTML = "";
 
-    listItems.forEach(({ data, marker }) => {
+    listItems.forEach((item) => {
+      const { data } = item;
+
       const div = document.createElement("div");
       div.className = "item";
 
@@ -136,24 +242,16 @@
       div.innerHTML = `
         <div class="name">${safeHtml(title)}</div>
         <div class="desc">${safeHtml(addressLine)}</div>
-        ${
-          url
-            ? `<div class="small">${safeHtml(url)}</div>`
-            : `<div class="small"></div>`
-        }
+        ${url ? `<div class="small">${safeHtml(url)}</div>` : `<div class="small"></div>`}
       `;
 
-      // Click: zoom + open popup
       div.addEventListener("click", () => {
-        map.setView([data.lat, data.lng], Math.max(map.getZoom(), 16), {
-          animate: true,
-        });
-        marker.openPopup();
+        map.setView([data.lat, data.lng], Math.max(map.getZoom(), 16), { animate: true });
+        safeOpenPopup(item);
       });
 
-      // Hover: gentle pan
       div.addEventListener("mouseenter", () => {
-        map.panTo([data.lat, data.lng], { animate: true });
+        try { map.panTo([data.lat, data.lng], { animate: true }); } catch (_) {}
       });
 
       listEl.appendChild(div);
@@ -162,6 +260,7 @@
 
   function applyFilter(query) {
     const q = normalizeSpaces(query).toLowerCase();
+
     const filtered = !q
       ? items
       : items.filter((x) => {
@@ -172,27 +271,43 @@
             d.city,
             d.description,
             buildAddress(d),
-          ]
-            .join(" ")
-            .toLowerCase();
+          ].join(" ").toLowerCase();
           return hay.includes(q);
         });
 
     renderList(filtered);
 
-    // Dim non-matching markers/rings
     const filteredSet = new Set(filtered);
     const dim = !!q;
 
     items.forEach((x) => {
       const on = !dim || filteredSet.has(x);
-      x.marker.setOpacity(on ? 1 : 0.25);
 
+      // Marker: base (blue) vs dim (yellow)
+      try {
+        x.marker.setIcon(on ? x.marker.options._baseIcon : dimIcon);
+        x.marker.setOpacity(on ? 1 : 0.95);
+      } catch (_) {}
+
+      // Rings: restore originals or yellow
       x.rings.forEach((r) => {
-        r.setStyle({
-          opacity: on ? 1 : 0.15,
-          fillOpacity: on ? r.options._baseFillOpacity : 0.02,
-        });
+        try {
+          if (on) {
+            r.setStyle({
+              color: r.options._baseColor,
+              fillColor: r.options._baseColor,
+              opacity: 1,
+              fillOpacity: r.options._baseFillOpacity,
+            });
+          } else {
+            r.setStyle({
+              color: DIM_COLOR,
+              fillColor: DIM_COLOR,
+              opacity: 0.9,
+              fillOpacity: 0.06,
+            });
+          }
+        } catch (_) {}
       });
     });
   }
@@ -203,15 +318,27 @@
     });
   }
 
-  // ---------- Data loading ----------
-  async function loadData() {
-    const res = await fetch("./data.csv", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Failed to load data.csv (${res.status})`);
+  // =========================================================
+  // DATASET LOADING
+  // =========================================================
+  function clearMapAndList() {
+    try { layer.clearLayers(); } catch (_) {}
+    items = [];
+    if (listEl) listEl.innerHTML = "";
+  }
+
+  async function loadDataset(datasetKey) {
+    clearMapAndList();
+
+    if (filterEl) filterEl.value = "";
+
+    const ds = DATASETS[datasetKey] || DATASETS[DEFAULT_DATASET];
+
+    const res = await fetch(ds.file, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load ${ds.file} (${res.status})`);
     const text = await res.text();
 
     const data = parseCSV(text);
-
-    items = [];
 
     data.forEach((d, idx) => {
       const lat = parseFloat(d.latitude);
@@ -221,7 +348,7 @@
       const street = normalizeSpaces(d.street || "");
       const postalcode = normalizeSpaces(d.postalcode || "");
       const city = normalizeSpaces(d.city || "");
-      const url = normalizeSpaces(d.description || ""); // your "description" = URL
+      const url = normalizeSpaces(d.description || "");
 
       const addressLine = buildAddress({ street, postalcode, city });
       const title = street || `Location ${idx + 1}`;
@@ -238,13 +365,13 @@
           <div style="font-weight:700;margin-bottom:6px">${safeHtml(title)}</div>
           <div style="margin-bottom:8px;color:#444">${safeHtml(addressLine)}</div>
           ${linkHtml ? `<div style="margin-bottom:8px">${linkHtml}</div>` : ""}
-          <div style="color:#666;font-size:12px">${lat.toFixed(
-            5
-          )}, ${lng.toFixed(5)}</div>
+          <div style="color:#666;font-size:12px">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
         </div>
       `;
 
-      const marker = L.marker([lat, lng]).bindPopup(popupHtml);
+      // Marker uses our base icon; store it so we can restore after dimming
+      const marker = L.marker([lat, lng], { icon: baseIcon }).bindPopup(popupHtml);
+      marker.options._baseIcon = baseIcon;
       marker.addTo(layer);
 
       const rings = RINGS.map((cfg) => {
@@ -256,8 +383,10 @@
           fillOpacity: cfg.fillOpacity,
         }).addTo(layer);
 
-        // store original fillOpacity for dimming logic
+        // Store originals so we can always restore after dimming
         c.options._baseFillOpacity = cfg.fillOpacity;
+        c.options._baseColor = cfg.color;
+
         return c;
       });
 
@@ -279,15 +408,32 @@
     if (items.length) {
       const bounds = layer.getBounds().pad(0.15);
       map.fitBounds(bounds);
-    } else {
-      // fallback view (Netherlands-ish)
-      map.setView([52.1, 5.1], 8);
+      setTimeout(() => {
+        try { map.invalidateSize(true); } catch (_) {}
+      }, 0);
     }
 
     renderList(items);
+    applyFilter(""); // reset styling
   }
 
-  loadData().catch((err) => {
+  // Wire dropdown => load dataset + update URL
+  if (datasetEl) {
+    datasetEl.addEventListener("change", () => {
+      const key = resolveDatasetKey(datasetEl.value);
+      setQueryParam("dataset", key);
+      loadDataset(key).catch((err) => {
+        console.error(err);
+        alert(err.message || String(err));
+      });
+    });
+  }
+
+  // Initial dataset from URL
+  const initialKey = resolveDatasetKey(getQueryParam("dataset"));
+  if (datasetEl) datasetEl.value = initialKey;
+
+  loadDataset(initialKey).catch((err) => {
     console.error(err);
     alert(err.message || String(err));
   });
