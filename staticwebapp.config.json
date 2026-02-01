@@ -5,7 +5,7 @@
       "allowedRoles": ["anonymous"],
       "statusCode": 301,
       "headers": {
-        "Location": "https://www.springtrapping.nl{path}"
+        "Location": "https://www.springtrapping.nl/{path}"
       }
     }
   ]
