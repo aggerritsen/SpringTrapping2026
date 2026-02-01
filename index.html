@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SpringTrapping2026</title>
+
+  <!-- Leaflet (CDN). If your network blocks unpkg, switch to local files:
+       <link rel="stylesheet" href="./vendor/leaflet/leaflet.css" />
+       <script src="./vendor/leaflet/leaflet.js"></script>
+  -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    .layout {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+    }
+
+    #sidebar {
+      border-right: 1px solid #e5e5e5;
+      overflow: auto;
+      padding: 12px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    /* Important: width + height so the map actually renders */
+    #map { height: 100%; width: 100%; }
+
+    .item {
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .item:hover { background: #fafafa; }
+
+    .name { font-weight: 700; margin-bottom: 4px; }
+    .desc { color: #444; font-size: 13px; line-height: 1.25rem; }
+    .small { color: #666; font-size: 12px; margin-top: 6px; word-break: break-word; }
+
+    .topbar { margin-bottom: 12px; }
+    .topbar input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    /* Optional: make links look nicer inside popups */
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="topbar">
+        <!-- Your CSV fields are street/postalcode/city/description(url) -->
+        <input id="filter" type="text" placeholder="Filter by street / postalcode / city / url…" />
+      </div>
+      <div id="list"></div>
+    </aside>
+
+    <main id="map"></main>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Optional debug line: uncomment to verify Leaflet loaded -->
+  <!-- <script>console.log("Leaflet L =", window.L);</script> -->
+
+  <script src="./app.js"></script>
+</body>
+</html>
