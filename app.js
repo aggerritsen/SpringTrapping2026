@@ -20,7 +20,6 @@
     nb:     { label: "Noord-Brabant",    file: "./data_noord_brabant.csv" },
     li:     { label: "Limburg",          file: "./data_limburg.csv" },
   };
-
   const DEFAULT_DATASET = "focus";
 
   // Yellow for non-selected items (rings + marker)
@@ -176,13 +175,12 @@
 
   const layer = L.featureGroup().addTo(map);
 
-  setTimeout(() => {
-    try { map.invalidateSize(true); } catch (_) {}
-  }, 0);
+  function safeInvalidate(force) {
+    try { map.invalidateSize(!!force); } catch (_) {}
+  }
 
-  window.addEventListener("resize", () => {
-    try { map.invalidateSize(false); } catch (_) {}
-  });
+  setTimeout(() => safeInvalidate(true), 0);
+  window.addEventListener("resize", () => safeInvalidate(false));
 
   const RINGS = [
     { radius: 100, color: "red",   fillOpacity: 0.12, weight: 2 },
@@ -198,6 +196,39 @@
   const listEl = document.getElementById("list");
   const filterEl = document.getElementById("filter");
   const datasetEl = document.getElementById("datasetSelect");
+
+  // Mobile panel elements
+  const sidebarEl = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("togglePanel");
+
+  // Only run hover pan on devices that actually support hover
+  const CAN_HOVER = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+  const IS_MOBILE_LAYOUT = () =>
+    window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+
+  function setPanelOpen(open) {
+    if (!sidebarEl || !toggleBtn) return;
+
+    if (open) {
+      sidebarEl.classList.add("open");
+      toggleBtn.textContent = "Map";
+    } else {
+      sidebarEl.classList.remove("open");
+      toggleBtn.textContent = "List";
+    }
+
+    // Give CSS transition time, then resize Leaflet
+    setTimeout(() => safeInvalidate(true), 220);
+  }
+
+  // Wire the mobile button
+  if (toggleBtn && sidebarEl) {
+    toggleBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const open = sidebarEl.classList.contains("open");
+      setPanelOpen(!open);
+    });
+  }
 
   function buildAddress(d) {
     const street = normalizeSpaces(d.street || "");
@@ -218,7 +249,7 @@
     }
 
     map.whenReady(() => {
-      try { map.invalidateSize(false); } catch (_) {}
+      safeInvalidate(false);
       setTimeout(() => {
         try { item.marker.openPopup(); } catch (_) {}
       }, 0);
@@ -248,11 +279,16 @@
       div.addEventListener("click", () => {
         map.setView([data.lat, data.lng], Math.max(map.getZoom(), 16), { animate: true });
         safeOpenPopup(item);
+
+        // On mobile, collapse list after choosing a point (so user sees the map)
+        if (IS_MOBILE_LAYOUT()) setPanelOpen(false);
       });
 
-      div.addEventListener("mouseenter", () => {
-        try { map.panTo([data.lat, data.lng], { animate: true }); } catch (_) {}
-      });
+      if (CAN_HOVER) {
+        div.addEventListener("mouseenter", () => {
+          try { map.panTo([data.lat, data.lng], { animate: true }); } catch (_) {}
+        });
+      }
 
       listEl.appendChild(div);
     });
@@ -329,7 +365,6 @@
 
   async function loadDataset(datasetKey) {
     clearMapAndList();
-
     if (filterEl) filterEl.value = "";
 
     const ds = DATASETS[datasetKey] || DATASETS[DEFAULT_DATASET];
@@ -408,13 +443,14 @@
     if (items.length) {
       const bounds = layer.getBounds().pad(0.15);
       map.fitBounds(bounds);
-      setTimeout(() => {
-        try { map.invalidateSize(true); } catch (_) {}
-      }, 0);
+      setTimeout(() => safeInvalidate(true), 0);
     }
 
     renderList(items);
     applyFilter(""); // reset styling
+
+    // On mobile, start with panel open (so user can choose)
+    if (IS_MOBILE_LAYOUT()) setPanelOpen(true);
   }
 
   // Wire dropdown => load dataset + update URL
