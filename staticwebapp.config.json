@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "route": "/*",
+      "allowedRoles": ["anonymous"],
+      "redirect": {
+        "destination": "https://www.springtrapping.nl{path}",
+        "statusCode": 301
+      }
+    }
+  ]
+}
