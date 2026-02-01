@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>SpringTrapping2026</title>
 
   <link
@@ -13,32 +13,187 @@
   />
 
   <style>
-    html, body { height: 100%; margin: 0; }
-    .layout { height: 100%; display: grid; grid-template-columns: 360px 1fr; }
-    #sidebar { border-right: 1px solid #e5e5e5; overflow: auto; padding: 12px; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    #map { height: 100%; width: 100%; }
-    .item { padding: 10px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-    .item:hover { background: #fafafa; }
-    .name { font-weight: 700; margin-bottom: 4px; }
-    .desc { color: #444; font-size: 13px; line-height: 1.25rem; }
-    .small { color: #666; font-size: 12px; margin-top: 6px; word-break: break-word; }
-    .topbar { margin-bottom: 12px; }
-    .topbar input, .topbar select {
+    :root {
+      --sidebar-w: 360px;
+      --border: #e5e5e5;
+      --shadow: 0 8px 24px rgba(0,0,0,.12);
+      --radius: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #fff;
+    }
+
+    /* =========================
+       DESKTOP LAYOUT
+    ========================= */
+
+    .layout {
+      height: 100%;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+    }
+
+    #sidebar {
+      border-right: 1px solid var(--border);
+      overflow: auto;
+      padding: 12px;
+      background: #fff;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Hide mobile header on desktop */
+    .mobile-header {
+      display: none;
+    }
+
+    /* =========================
+       SIDEBAR UI
+    ========================= */
+
+    .topbar {
+      margin-bottom: 12px;
+    }
+
+    .topbar input,
+    .topbar select,
+    .topbar button {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 14px;
       box-sizing: border-box;
+      background: #fff;
     }
-    .row { display: grid; gap: 8px; }
-    .hint { color: #666; font-size: 12px; margin: 6px 2px 0; }
+
+    .row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .hint {
+      color: #666;
+      font-size: 12px;
+      margin: 6px 2px 0;
+    }
+
+    .item {
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .item:hover {
+      background: #fafafa;
+    }
+
+    .name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .desc {
+      color: #444;
+      font-size: 13px;
+    }
+
+    .small {
+      color: #666;
+      font-size: 12px;
+      margin-top: 6px;
+      word-break: break-word;
+    }
+
+    /* =========================
+       MOBILE LAYOUT
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      #map {
+        height: 100vh;
+        width: 100vw;
+      }
+
+      #sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        border-right: none;
+        border-top: 1px solid var(--border);
+        border-radius: var(--radius) var(--radius) 0 0;
+
+        background: #fff;
+        box-shadow: var(--shadow);
+
+        max-height: 55vh;
+
+        transform: translateY(calc(55vh - 52px));
+        transition: transform 180ms ease;
+
+        z-index: 1000;
+      }
+
+      #sidebar.open {
+        transform: translateY(0);
+      }
+
+      /* show mobile header ONLY on mobile */
+      .mobile-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .mobile-title {
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      #togglePanel {
+        width: auto;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #fff;
+      }
+    }
   </style>
 </head>
+
 <body>
+
   <div class="layout">
-    <aside id="sidebar">
+
+    <aside id="sidebar" class="open">
+
+      <!-- Mobile-only header -->
+      <div class="mobile-header">
+        <div class="mobile-title">SpringTrapping2026</div>
+        <button id="togglePanel" type="button">Map</button>
+      </div>
+
       <div class="topbar row">
+
         <select id="datasetSelect">
           <option value="focus">Focus Gemeenten</option>
           <option value="noord">Noord-Nederland</option>
@@ -48,12 +203,21 @@
           <option value="nb">Noord-Brabant</option>
           <option value="li">Limburg</option>
         </select>
+
         <input id="filter" type="text" placeholder="Filter by street / postalcode / city / url…" />
-        <div class="hint">Tip: use URL like <code>?dataset=focus</code> or <code>?dataset=zh</code></div>
+
+        <div class="hint">
+          Tip: use URL like <code>?dataset=focus</code>
+        </div>
+
       </div>
+
       <div id="list"></div>
+
     </aside>
+
     <main id="map"></main>
+
   </div>
 
   <script
@@ -61,6 +225,8 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
+
   <script src="./app.js"></script>
+
 </body>
 </html>
