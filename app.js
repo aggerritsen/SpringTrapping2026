@@ -211,7 +211,7 @@
 
     if (open) {
       sidebarEl.classList.add("open");
-      toggleBtn.textContent = "Map";
+      toggleBtn.textContent = "Kaart";
     } else {
       sidebarEl.classList.remove("open");
       toggleBtn.textContent = "Lijst";
