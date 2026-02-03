@@ -176,6 +176,26 @@
         border: 1px solid #ddd;
         background: #fff;
       }
+
+      /* Floating "Lijst" button when panel is closed */
+      #openListBtn {
+        position: fixed;
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid #ddd;
+        background: #fff;
+        box-shadow: var(--shadow);
+        z-index: 1100;
+        display: none;
+      }
+
+      body.panel-closed #openListBtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -215,6 +235,9 @@
     <main id="map"></main>
 
   </div>
+
+  <!-- Mobile-only floating button to reopen the list -->
+  <button id="openListBtn" type="button">Lijst</button>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

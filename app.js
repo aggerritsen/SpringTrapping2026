@@ -200,6 +200,7 @@
   // Mobile panel elements
   const sidebarEl = document.getElementById("sidebar");
   const toggleBtn = document.getElementById("togglePanel");
+  const openListBtn = document.getElementById("openListBtn");
 
   // Only run hover pan on devices that actually support hover
   const CAN_HOVER = window.matchMedia && window.matchMedia("(hover: hover)").matches;
@@ -211,9 +212,11 @@
 
     if (open) {
       sidebarEl.classList.add("open");
+      document.body.classList.remove("panel-closed");
       toggleBtn.textContent = "Kaart";
     } else {
       sidebarEl.classList.remove("open");
+      document.body.classList.add("panel-closed");
       toggleBtn.textContent = "Lijst";
     }
 
@@ -227,6 +230,13 @@
       e.preventDefault();
       const open = sidebarEl.classList.contains("open");
       setPanelOpen(!open);
+    });
+  }
+
+  if (openListBtn) {
+    openListBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      setPanelOpen(true);
     });
   }
 
