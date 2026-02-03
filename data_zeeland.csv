@@ -262,7 +262,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (3.61452 51.32102)",51.32102,3.61452,Oranjestraat, 4515 CA, IJzendijke,https://waarneming.nl/observation/357306689/
 "POINT (3.77101 51.45158)",51.45158,3.77101,Werrilaan, 4453 CA, 's-Heerenhoek,https://waarneming.nl/observation/357364738/
 "POINT (3.99451 51.51959)",51.51959,3.99451,Bakkersboogerd, 4424 EJ, Wemeldinge,https://waarneming.nl/observation/357492184/
-"POINT (3.43981 51.3654)",51.36540,3.43981,4506 HN, Cadzand,https://waarneming.nl/observation/357981964/
+"POINT (3.43981 51.3654)",51.36540,3.43981,,4506 HN, Cadzand,https://waarneming.nl/observation/357981964/
 "POINT (3.99362 51.51998)",51.51998,3.99362,Bakkersboogerd, 4424 EJ, Wemeldinge,https://waarneming.nl/observation/357492017/
 "POINT (3.6168 51.48811)",51.48811,3.61680,Statenhove, 4336 CB, Middelburg,https://waarneming.nl/observation/357550463/
 "POINT (4.02727 51.24835)",51.24835,4.02727,Magdalenastraat, 4566 BA, Heikant,https://waarneming.nl/observation/357624284/
@@ -284,7 +284,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (3.97307 51.32665)",51.32665,3.97307,Populierenstraat, 4581 BR, Vogelwaarde,https://waarneming.nl/observation/358667936/
 "POINT (4.03569 51.44901)",51.44901,4.03569,Burgemeester Elenbaasstraat, 4416 AN, Kruiningen,https://waarneming.nl/observation/358581662/
 "POINT (4.14391 51.54404)",51.54404,4.14391,Markt, 4693 CA, Poortvliet,https://waarneming.nl/observation/358679910/
-"POINT (4.03115 51.45028)",51.45028,4.03115,4416 AB, Kruiningen,https://waarneming.nl/observation/359120957/
+"POINT (4.03115 51.45028)",51.45028,4.03115,,4416 AB, Kruiningen,https://waarneming.nl/observation/359120957/
 "POINT (3.70726 51.67707)",51.67707,3.70726,Hoge Hilleweg, 4328 RA, Burgh-Haamstede,https://waarneming.nl/observation/358646003/
 "POINT (3.81219 51.49904)",51.49904,3.81219,Arendstraat, 4458 AP, 's-Heer Arendskerke,https://waarneming.nl/observation/358646835/
 "POINT (4.19384 51.42927)",51.42927,4.19384,Middenhof, 4411 RW, Rilland,https://waarneming.nl/observation/358765072/
@@ -659,7 +659,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.17881 51.55019)",51.55019,4.17881,Puitsedijk, 4691 PJ, Oud-Vossemeer,https://waarneming.nl/observation/371693410/
 "POINT (3.90196 51.45997)",51.45997,3.90196,Ambachtsstraat, 4431 BG, 's-Gravenpolder,https://waarneming.nl/observation/371693202/
 "POINT (4.04014 51.36613)",51.36613,4.04014,Kruisdorpstraat, 4587 RB, Kloosterzande,https://waarneming.nl/observation/371710830/
-"POINT (4.07281 51.66811)",51.66811,4.07281,Hoogerwerfsweg "De elf Boompjes", 4311 NR, Bruinisse,https://waarneming.nl/observation/371814067/
+"POINT (4.07281 51.66811)",51.66811,4.07281,Hoogerwerfsweg 'De elf Boompjes', 4311 NR, Bruinisse,https://waarneming.nl/observation/371814067/
 "POINT (4.01722 51.28766)",51.28766,4.01722,Hogeweg, 4561 RH, Hulst,https://waarneming.nl/observation/371818563/
 "POINT (3.84315 51.33287)",51.33287,3.84315,Rembrandtlaan, 4532 HP, Terneuzen,https://waarneming.nl/observation/371760059/
 "POINT (3.54366 51.48261)",51.48261,3.54366,Duinstraat, 4371 PN, Koudekerke,https://waarneming.nl/observation/371780728/
@@ -1002,7 +1002,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.0413 51.44727)",51.44727,4.04130,Couwervestraat, 4416 BD, Kruiningen,https://waarneming.nl/observation/377079932/
 "POINT (3.52129 51.5719)",51.57190,3.52129,Duinvlietweg, 4356 ND, Oostkapelle,https://waarneming.nl/observation/377405189/
 "POINT (3.37792 51.35223)",51.35223,3.37792,Noordstraat, 4525 AA, Retranchement,https://waarneming.nl/observation/377133118/
-"POINT (4.10541 51.42125)",51.42125,4.10541,4414 NA, Waarde,https://waarneming.nl/observation/377133935/
+"POINT (4.10541 51.42125)",51.42125,4.10541,,4414 NA, Waarde,https://waarneming.nl/observation/377133935/
 "POINT (3.60129 51.49088)",51.49088,3.60129,Arnelaan, 4335 TA, Middelburg,https://waarneming.nl/observation/377373345/
 "POINT (4.21932 51.53027)",51.53027,4.21932,Eendrachtsweg, 4691 EG, Tholen,https://waarneming.nl/observation/377466959/
 "POINT (3.6967 51.71264)",51.71264,3.69670,Strandweg, 4328 KL, Burgh-Haamstede,https://waarneming.nl/observation/377726364/
@@ -1021,12 +1021,12 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (3.8626 51.50169)",51.50169,3.86260,Plein, 4472 AV, 's-Heer Hendrikskinderen,https://waarneming.nl/observation/377361405/
 "POINT (4.16706 51.66035)",51.66035,4.16706,Krammersluis, 4311 RS, Bruinisse,https://waarneming.nl/observation/377230341/
 "POINT (3.8957 51.68564)",51.68564,3.89570,Brieskerkestraat, 4321 AX, Kerkwerve,https://waarneming.nl/observation/377236250/
-"POINT (4.16647 51.63166)",51.63166,4.16647,4675 PJ, Sint Philipsland,https://waarneming.nl/observation/377245656/
+"POINT (4.16647 51.63166)",51.63166,4.16647,,4675 PJ, Sint Philipsland,https://waarneming.nl/observation/377245656/
 "POINT (4.08207 51.54717)",51.54717,4.08207,Keethil, 4695 CM, Sint-Maartensdijk,https://waarneming.nl/observation/377256660/
 "POINT (3.99803 51.45028)",51.45028,3.99803,Zijpe, 4417 CN, Hansweert,https://waarneming.nl/observation/377258529/
 "POINT (4.00422 51.44874)",51.44874,4.00422,Schoolstraat, 4417 AB, Hansweert,https://waarneming.nl/observation/377258707/
 "POINT (3.68769 51.55883)",51.55883,3.68769,Marinuswerf, 4493 DJ, Kamperland,https://waarneming.nl/observation/377300539/
-"POINT (4.07384 51.67024)",51.67024,4.07384,Hoogerwerfsweg "De Tong", 4311 NP, Bruinisse,https://waarneming.nl/observation/377337629/
+"POINT (4.07384 51.67024)",51.67024,4.07384,Hoogerwerfsweg 'De Tong', 4311 NP, Bruinisse,https://waarneming.nl/observation/377337629/
 "POINT (3.59063 51.46991)",51.46991,3.59063,Vrijburgstraat, 4387 AH, Vlissingen,https://waarneming.nl/observation/377422200/
 "POINT (3.60135 51.48316)",51.48316,3.60135,Volkerakstraat, 4335 VK, Middelburg,https://waarneming.nl/observation/377332218/
 "POINT (3.60093 51.49088)",51.49088,3.60093,Arnelaan, 4335 TA, Middelburg,https://waarneming.nl/observation/377393330/
@@ -1148,7 +1148,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (3.59426 51.45756)",51.45756,3.59426,Buitenhavenpad, 4388 GW, Oost-Souburg,https://waarneming.nl/observation/379255296/
 "POINT (3.95601 51.21964)",51.21964,3.95601,Kruispad, 4576 BW, Koewacht,https://waarneming.nl/observation/379301611/
 "POINT (3.95924 51.22285)",51.22285,3.95924,Berlaersstraat, 4576 BP, Koewacht,https://waarneming.nl/observation/379301812/
-"POINT (3.43828 51.36557)",51.36557,3.43828,4506 HN, Cadzand,https://waarneming.nl/observation/379318469/
+"POINT (3.43828 51.36557)",51.36557,3.43828,,4506 HN, Cadzand,https://waarneming.nl/observation/379318469/
 "POINT (3.50154 51.33501)",51.33501,3.50154,Maaidijk, 4501 WC, Oostburg,https://waarneming.nl/observation/379315606/
 "POINT (3.46211 51.51508)",51.51508,3.46211,Grindweg, 4361 SL, Westkapelle,https://waarneming.nl/observation/379342305/
 "POINT (3.91931 51.25718)",51.25718,3.91931,Langeweg, 4571 SZ, Axel,https://waarneming.nl/observation/379400294/
@@ -1290,7 +1290,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.07822 51.28256)",51.28256,4.07822,Bietenweg, 4567 PA, Hulst,https://waarneming.nl/observation/380275884/
 "POINT (3.76193 51.46215)",51.46215,3.76193,Molendijk, 4453 VA, 's-Heerenhoek,https://waarneming.nl/observation/380305498/
 "POINT (4.05298 51.27054)",51.27054,4.05298,Schumannstraat, 4561 VV, Hulst,https://waarneming.nl/observation/380293449/
-"POINT (4.10558 51.42127)",51.42127,4.10558,4414 NA, Waarde,https://waarneming.nl/observation/380299146/
+"POINT (4.10558 51.42127)",51.42127,4.10558,,4414 NA, Waarde,https://waarneming.nl/observation/380299146/
 "POINT (4.06362 51.53951)",51.53951,4.06362,Kastelijnsweg, 4695 RT, Sint-Maartensdijk,https://waarneming.nl/observation/380315813/
 "POINT (4.04884 51.25805)",51.25805,4.04884,Wilhelminastraat, 4564 AD, Sint Jansteen,https://waarneming.nl/observation/380312815/
 "POINT (3.89369 51.50327)",51.50327,3.89369,Oostsingel, 4461 KD, Goes,https://waarneming.nl/observation/380323277/

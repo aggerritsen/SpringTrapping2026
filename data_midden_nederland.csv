@@ -206,7 +206,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.9588 52.51855)",52.51855,4.95880,Reigerpark, 1444 AA, Purmerend,https://waarneming.nl/observation/358112805/
 "POINT (4.67674 52.30227)",52.30227,4.67674,Asserweg, 2131 VW, Hoofddorp,https://waarneming.nl/observation/358759955/
 "POINT (5.30413 52.05478)",52.05478,5.30413,Arnhemsebovenweg, 3971 MJ, Driebergen-Rijsenburg,https://waarneming.nl/observation/358308835/
-"POINT (6.23405 52.09738)",52.09738,6.23405,7233 SG, Vierakker,https://waarneming.nl/observation/358322471/
+"POINT (6.23405 52.09738)",52.09738,6.23405,,7233 SG, Vierakker,https://waarneming.nl/observation/358322471/
 "POINT (6.66093 52.09793)",52.09793,6.66093,Ketterinkbraak, 7152 JD, Eibergen,https://waarneming.nl/observation/358360193/
 "POINT (5.48565 52.1854)",52.18540,5.48565,Klaarwaterweg, 3864 MP, Nijkerkerveen,https://waarneming.nl/observation/358413675/
 "POINT (4.8698 52.03038)",52.03038,4.86980,Twijnen, 3421 JP, Oudewater,https://waarneming.nl/observation/358445143/
@@ -325,7 +325,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.62258 52.35716)",52.35716,5.62258,Waterstadboulevard, 3846 JN, Harderwijk,https://waarneming.nl/observation/364048368/
 "POINT (5.42724 52.01926)",52.01926,5.42724,Groenoordlaan, 3956 BA, Leersum,https://waarneming.nl/observation/363959155/
 "POINT (6.08643 51.89344)",51.89344,6.08643,Schoolstraat, 6913 AD, Aerdt,https://waarneming.nl/observation/364171938/
-"POINT (6.13507 51.93067)",51.93067,6.13507,6942 GH, Nieuw-Dijk,https://waarneming.nl/observation/364171951/
+"POINT (6.13507 51.93067)",51.93067,6.13507,,6942 GH, Nieuw-Dijk,https://waarneming.nl/observation/364171951/
 "POINT (5.62337 52.35733)",52.35733,5.62337,Noorderhoofd, 3846 JV, Harderwijk,https://waarneming.nl/observation/364046104/
 "POINT (5.39172 52.00233)",52.00233,5.39172,Gooyerdijk, 3947 NA, Langbroek,https://waarneming.nl/observation/364319775/
 "POINT (5.37168 52.19197)",52.19197,5.37168,Zandkamp, 3828 GJ, Hoogland,https://waarneming.nl/observation/364288192/
@@ -402,7 +402,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.40015 52.12212)",52.12212,5.40015,Treekerweg, 3832 GX, Leusden,https://waarneming.nl/observation/367016069/
 "POINT (5.30458 52.21255)",52.21255,5.30458,Callenburglaan, 3742 MT, Baarn,https://waarneming.nl/observation/367039622/
 "POINT (5.40174 52.00777)",52.00777,5.40174,Broekhuizerlaan, 3956 NS, Leersum,https://waarneming.nl/observation/367306758/
-"POINT (5.51942 52.50158)",52.50158,5.51942,8219 AS, Lelystad,https://waarneming.nl/observation/367205799/
+"POINT (5.51942 52.50158)",52.50158,5.51942,,8219 AS, Lelystad,https://waarneming.nl/observation/367205799/
 "POINT (5.40134 52.00742)",52.00742,5.40134,Broekhuizerlaan, 3956 NS, Leersum,https://waarneming.nl/observation/367336592/
 "POINT (5.1081 52.08316)",52.08316,5.10810,Veilingstraat, 3521 BE, Utrecht,https://waarneming.nl/observation/367491625/
 "POINT (5.93811 51.781)",51.78100,5.93811,Cranenburgsestraat, 6561 AN, Groesbeek,https://waarneming.nl/observation/367426772/
@@ -742,7 +742,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.57876 51.92654)",51.92654,6.57876,Hogestraat, 7122 BN, Aalten,https://waarneming.nl/observation/375772588/
 "POINT (6.47571 51.8926)",51.89260,6.47571,Iemenhorst, 7084 BC, Breedenbroek,https://waarneming.nl/observation/375688038/
 "POINT (5.20921 52.07198)",52.07198,5.20921,Albert Nijlandpad, 3981 HR, Bunnik,https://waarneming.nl/observation/375724592/
-"POINT (4.72412 53.07454)",53.07454,4.72412,1791 PP, De Koog,https://waarneming.nl/observation/375734603/
+"POINT (4.72412 53.07454)",53.07454,4.72412,,1791 PP, De Koog,https://waarneming.nl/observation/375734603/
 "POINT (5.08418 51.89926)",51.89926,5.08418,Wederiklaan, 4143 CK, Leerdam,https://waarneming.nl/observation/375737303/
 "POINT (4.85198 52.6673)",52.66730,4.85198,Parklaan, 1701 GS, Heerhugowaard,https://waarneming.nl/observation/375752565/
 "POINT (5.56845 52.02941)",52.02941,5.56845,Gersteveld, 3902 EN, Veenendaal,https://waarneming.nl/observation/376881815/
@@ -909,7 +909,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.80037 51.97506)",51.97506,6.80037,Ratumseweg, 7106 CD, Winterswijk Ratum,https://waarneming.nl/observation/379689970/
 "POINT (5.87668 51.98118)",51.98118,5.87668,Klingelbeekseweg, 6812 DE, Arnhem,https://waarneming.nl/observation/379702200/
 "POINT (5.81717 51.83224)",51.83224,5.81717,Adagiostraat, 6544 PM, Nijmegen,https://waarneming.nl/observation/379752959/
-"POINT (4.6211 52.39417)",52.39417,4.62110,2051 KR, Overveen,https://waarneming.nl/observation/382197363/
+"POINT (4.6211 52.39417)",52.39417,4.62110,,2051 KR, Overveen,https://waarneming.nl/observation/382197363/
 "POINT (5.99247 51.87176)",51.87176,5.99247,Klaverland, 6566 JD, Millingen aan de Rijn,https://waarneming.nl/observation/380458117/
 "POINT (5.58498 52.13508)",52.13508,5.58498,Churchillstraat, 3772 KV, Barneveld,https://waarneming.nl/observation/379794233/
 "POINT (5.74124 51.87199)",51.87199,5.74124,Julianastraat, 6644 BN, Ewijk,https://waarneming.nl/observation/379853112/
@@ -1017,7 +1017,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.88979 51.99085)",51.99085,5.88979,Bakenbergseweg, 6814 MK, Arnhem,https://waarneming.nl/observation/380523122/
 "POINT (5.85711 51.77836)",51.77836,5.85711,Heidezoom, 6581 VB, Malden,https://waarneming.nl/observation/380523187/
 "POINT (5.41825 51.88785)",51.88785,5.41825,Professor Donderslaan, 4003 WV, Tiel,https://waarneming.nl/observation/380530478/
-"POINT (5.76016 51.86024)",51.86024,5.76016,6641 PB, Beuningen,https://waarneming.nl/observation/380534369/
+"POINT (5.76016 51.86024)",51.86024,5.76016,,6641 PB, Beuningen,https://waarneming.nl/observation/380534369/
 "POINT (6.56886 51.92465)",51.92465,6.56886,Schorpioen, 7122 XL, Aalten,https://waarneming.nl/observation/380539477/
 "POINT (4.65798 52.34975)",52.34975,4.65798,Weldam, 2036 CK, Haarlem,https://waarneming.nl/observation/380525743/
 "POINT (5.23525 52.26487)",52.26487,5.23525,Heideweg, 1261 GP, Blaricum,https://waarneming.nl/observation/380572832/

@@ -70,7 +70,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.3253 51.71535)",51.71535,5.32530,Vijfde Haren, 5233 BM, 's-Hertogenbosch,https://waarneming.nl/observation/338641786/
 "POINT (4.98976 51.57663)",51.57663,4.98976,Oldenzaalsingel, 5045 TR, Tilburg,https://waarneming.nl/observation/338588322/
 "POINT (5.18399 51.56981)",51.56981,5.18399,Oranjelaan, 5062 KA, Oisterwijk,https://waarneming.nl/observation/338686451/
-"POINT (5.17473 51.54836)",51.54836,5.17473,5066 XB, Moergestel,https://waarneming.nl/observation/338693284/
+"POINT (5.17473 51.54836)",51.54836,5.17473,,5066 XB, Moergestel,https://waarneming.nl/observation/338693284/
 "POINT (4.88063 51.70431)",51.70431,4.88063,Loddersweer, 4942 AG, Raamsdonksveer,https://waarneming.nl/observation/338694732/
 "POINT (5.5152 51.45462)",51.45462,5.51520,Ministerlaan, 5631 NA, Eindhoven,https://waarneming.nl/observation/338741369/
 "POINT (4.64755 51.4282)",51.42820,4.64755,Mereltjesstraat, 4884 MK, Wernhout,https://waarneming.nl/observation/338729204/
@@ -88,7 +88,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.39407 51.36384)",51.36384,4.39407,Postbaan, 4645 GT, Putte,https://waarneming.nl/observation/339192305/
 "POINT (4.81802 51.54008)",51.54008,4.81802,Cauwelaerseweg, 4858 RH, Ulvenhout AC,https://waarneming.nl/observation/339193633/
 "POINT (5.31396 51.36505)",51.36505,5.31396,Lange Voren, 5521 DC, Eersel,https://waarneming.nl/observation/339257657/
-"POINT (4.85312 51.62868)",51.62868,4.85312,4904 PX, Oosterhout,https://waarneming.nl/observation/339267073/
+"POINT (4.85312 51.62868)",51.62868,4.85312,,4904 PX, Oosterhout,https://waarneming.nl/observation/339267073/
 "POINT (4.66732 51.47884)",51.47884,4.66732,Akkermolenweg, 4881 BL, Zundert,https://waarneming.nl/observation/340207409/
 "POINT (5.08418 51.58961)",51.58961,5.08418,Strausslaan, 5011 KE, Tilburg,https://waarneming.nl/observation/339452172/
 "POINT (5.19553 51.34259)",51.34259,5.19553,De Strook, 5531 RT, Reusel,https://waarneming.nl/observation/340241243/
@@ -942,7 +942,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.36925 51.50367)",51.50367,5.36925,Jaagvelden, 5685 JN, Best,https://waarneming.nl/observation/364586350/
 "POINT (5.27421 51.39057)",51.39057,5.27421,Molenweg, 5528 NG, Hoogeloon,https://waarneming.nl/observation/364605591/
 "POINT (5.0275 51.6565)",51.65650,5.02750,Hilsestraat, 5171 AD, Kaatsheuvel,https://waarneming.nl/observation/364694296/
-"POINT (4.25588 51.524)",51.52400,4.25588,4661 PV, Halsteren,https://waarneming.nl/observation/364695596/
+"POINT (4.25588 51.524)",51.52400,4.25588,,4661 PV, Halsteren,https://waarneming.nl/observation/364695596/
 "POINT (5.02321 51.52538)",51.52538,5.02321,Dorpstraat, 5133 AD, Riel,https://waarneming.nl/observation/364786053/
 "POINT (5.34665 51.32326)",51.32326,5.34665,Hegmulder, 5571 RK, Bergeijk,https://waarneming.nl/observation/364775712/
 "POINT (4.6236 51.4506)",51.45060,4.62360,Grote Heistraat, 4884 JC, Wernhout,https://waarneming.nl/observation/364802249/
@@ -1049,7 +1049,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.30201 51.56725)",51.56725,4.30201,Witte Ruiterweg, 4651 PX, Steenbergen,https://waarneming.nl/observation/366288386/
 "POINT (4.30177 51.56608)",51.56608,4.30177,Witte Ruiterweg, 4651 PX, Steenbergen,https://waarneming.nl/observation/366290854/
 "POINT (5.40987 51.43955)",51.43955,5.40987,Grasvink, 5658 EB, Eindhoven,https://waarneming.nl/observation/366298166/
-"POINT (4.83158 51.73156)",51.73156,4.83158,4924 AA, Drimmelen,https://waarneming.nl/observation/366298989/
+"POINT (4.83158 51.73156)",51.73156,4.83158,,4924 AA, Drimmelen,https://waarneming.nl/observation/366298989/
 "POINT (5.47752 51.42652)",51.42652,5.47752,Karel van den Woestijnelaan, 5615 EL, Eindhoven,https://waarneming.nl/observation/366358284/
 "POINT (5.19585 51.69277)",51.69277,5.19585,Irenelaan, 5251 JN, Vlijmen,https://waarneming.nl/observation/366423539/
 "POINT (5.52426 51.42696)",51.42696,5.52426,Geldropseweg, 5645 TL, Eindhoven,https://waarneming.nl/observation/366419029/
@@ -1082,12 +1082,12 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.01862 51.67839)",51.67839,5.01862,Reiger, 5161 TZ, Sprang-Capelle,https://waarneming.nl/observation/366939134/
 "POINT (5.46484 51.73486)",51.73486,5.46484,Magnolia, 5386 EP, Papendijk,https://waarneming.nl/observation/366954933/
 "POINT (5.2275 51.33789)",51.33789,5.22750,Troprijt, 5531 NA, Bladel,https://waarneming.nl/observation/366954592/
-"POINT (5.40214 51.72066)",51.72066,5.40214,5244 PJ, Rosmalen,https://waarneming.nl/observation/367016142/
+"POINT (5.40214 51.72066)",51.72066,5.40214,,5244 PJ, Rosmalen,https://waarneming.nl/observation/367016142/
 "POINT (5.22763 51.33841)",51.33841,5.22763,Troprijt, 5531 NA, Bladel,https://waarneming.nl/observation/366957925/
 "POINT (5.13046 51.38852)",51.38852,5.13046,Averbodelaan, 5095 AS, Hooge Mierde,https://waarneming.nl/observation/367043166/
 "POINT (4.41096 51.68913)",51.68913,4.41096,Hellegatsweg, 4797 SM, Willemstad,https://waarneming.nl/observation/367015020/
 "POINT (4.83146 51.64519)",51.64519,4.83146,Hondstraat, 4904 TC, Oosterhout,https://waarneming.nl/observation/367016257/
-"POINT (4.82864 51.72121)",51.72121,4.82864,4924 AA, Drimmelen,https://waarneming.nl/observation/369178125/
+"POINT (4.82864 51.72121)",51.72121,4.82864,,4924 AA, Drimmelen,https://waarneming.nl/observation/369178125/
 "POINT (4.63304 51.55655)",51.55655,4.63304,Contrabas, 4876 VE, Etten-Leur,https://waarneming.nl/observation/367024768/
 "POINT (4.26601 51.52946)",51.52946,4.26601,Maaipad, 4661 EX, Halsteren,https://waarneming.nl/observation/367042723/
 "POINT (4.38848 51.64975)",51.64975,4.38848,Markweg Zuid, 4794 SN, Heijningen,https://waarneming.nl/observation/367169979/
@@ -1199,7 +1199,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.94354 51.53011)",51.53011,4.94354,Steenfabriek, 5126 PB, Gilze,https://waarneming.nl/observation/368543965/
 "POINT (5.69809 51.47611)",51.47611,5.69809,Veluwehof, 5709 KA, Helmond,https://waarneming.nl/observation/368661287/
 "POINT (5.46174 51.42419)",51.42419,5.46174,Hoogstraat, 5654 NJ, Eindhoven,https://waarneming.nl/observation/368585167/
-"POINT (4.79892 51.71971)",51.71971,4.79892,4924 AA, Drimmelen,https://waarneming.nl/observation/369911075/
+"POINT (4.79892 51.71971)",51.71971,4.79892,,4924 AA, Drimmelen,https://waarneming.nl/observation/369911075/
 "POINT (4.27731 51.49603)",51.49603,4.27731,Dubbelstraat, 4611 GJ, Bergen op Zoom,https://waarneming.nl/observation/368579199/
 "POINT (4.50663 51.6141)",51.61410,4.50663,Oude Kerkstraat, 4758 BD, Standdaarbuiten,https://waarneming.nl/observation/368592145/
 "POINT (4.46309 51.4828)",51.48280,4.46309,Oostmoer, 4709 BE, Nispen,https://waarneming.nl/observation/368779124/
@@ -1391,7 +1391,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.42049 51.42459)",51.42459,5.42049,Honk, 5502 VL, Veldhoven,https://waarneming.nl/observation/370628204/
 "POINT (5.39291 51.70363)",51.70363,5.39291,Jos de Letterlaan, 5248 NX, Rosmalen,https://waarneming.nl/observation/370640638/
 "POINT (5.04017 51.55226)",51.55226,5.04017,Zwin, 5032 TW, Tilburg,https://waarneming.nl/observation/370678542/
-"POINT (4.532 51.67959)",51.67959,4.53200,4791 RK, Klundert,https://waarneming.nl/observation/371557137/
+"POINT (4.532 51.67959)",51.67959,4.53200,,4791 RK, Klundert,https://waarneming.nl/observation/371557137/
 "POINT (5.33672 51.64345)",51.64345,5.33672,Van Loonstraat, 5271 HE, Sint-Michielsgestel,https://waarneming.nl/observation/370679620/
 "POINT (5.32422 51.58174)",51.58174,5.32422,Stapelen, 5281 EH, Lennisheuvel,https://waarneming.nl/observation/370737174/
 "POINT (4.57233 51.54637)",51.54637,4.57233,Canadastraat, 4715 RR, Rucphen,https://waarneming.nl/observation/370695346/
@@ -1431,7 +1431,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.06105 51.67601)",51.67601,5.06105,Johan Wagenaarstraat, 5144 VD, Waalwijk,https://waarneming.nl/observation/371309013/
 "POINT (5.32498 51.72837)",51.72837,5.32498,Teisterbantstraat, 5236 AJ, 's-Hertogenbosch,https://waarneming.nl/observation/370940067/
 "POINT (4.82845 51.55871)",51.55871,4.82845,Roosbergseweg, 4854 PM, Bavel,https://waarneming.nl/observation/371068801/
-"POINT (4.47601 51.53396)",51.53396,4.47601,4702 HP, Roosendaal,https://waarneming.nl/observation/371071566/
+"POINT (4.47601 51.53396)",51.53396,4.47601,,4702 HP, Roosendaal,https://waarneming.nl/observation/371071566/
 "POINT (4.69975 51.51791)",51.51791,4.69975,Burgemeester Hartmanstraat, 4891 BD, Rijsbergen,https://waarneming.nl/observation/371071512/
 "POINT (5.30509 51.73059)",51.73059,5.30509,Fleringen, 5235 EZ, 's-Hertogenbosch,https://waarneming.nl/observation/370981565/
 "POINT (4.29029 51.48247)",51.48247,4.29029,Augustalaan, 4615 HN, Bergen op Zoom,https://waarneming.nl/observation/371843475/
@@ -1469,7 +1469,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.55474 51.61233)",51.61233,5.55474,van Speijkstraat, 5463 EB, Veghel,https://waarneming.nl/observation/371322589/
 "POINT (4.95694 51.81681)",51.81681,4.95694,Philips van Nassaustraat, 4254 DE, Sleeuwijk,https://waarneming.nl/observation/371328585/
 "POINT (4.82304 51.56977)",51.56977,4.82304,Oude Bredaseweg, 4854 BR, Bavel,https://waarneming.nl/observation/371342650/
-"POINT (5.16126 51.47508)",51.47508,5.16126,5087 KE, Diessen,https://waarneming.nl/observation/371357506/
+"POINT (5.16126 51.47508)",51.47508,,5.16126,5087 KE, Diessen,https://waarneming.nl/observation/371357506/
 "POINT (4.4381 51.53002)",51.53002,4.43810,Poolselaan, 4703 AA, Roosendaal,https://waarneming.nl/observation/371356519/
 "POINT (4.75339 51.56539)",51.56539,4.75339,Doctor Batenburglaan, 4837 BP, Breda,https://waarneming.nl/observation/371344604/
 "POINT (4.26629 51.51561)",51.51561,4.26629,Kannewielseweg, 4661 RR, Halsteren,https://waarneming.nl/observation/371345259/
@@ -1525,7 +1525,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.48459 51.52303)",51.52303,4.48459,Amethistdijk, 4706 BD, Roosendaal,https://waarneming.nl/observation/371645580/
 "POINT (5.12741 51.6918)",51.69180,5.12741,Berkenstraat, 5151 XK, Drunen,https://waarneming.nl/observation/371740993/
 "POINT (5.1848 51.69093)",51.69093,5.18480,Meidoornstraat, 5253 EA, Nieuwkuijk,https://waarneming.nl/observation/371648986/
-"POINT (4.46416 51.56019)",51.56019,4.46416,4704 RP, Roosendaal,https://waarneming.nl/observation/371680290/
+"POINT (4.46416 51.56019)",51.56019,4.46416,,4704 RP, Roosendaal,https://waarneming.nl/observation/371680290/
 "POINT (5.16135 51.35368)",51.35368,5.16135,Driespad, 5541 AC, Reusel,https://waarneming.nl/observation/371778682/
 "POINT (5.48031 51.39285)",51.39285,5.48031,Goudbergstraat, 5583 BD, Aalst,https://waarneming.nl/observation/372609855/
 "POINT (5.47547 51.47294)",51.47294,5.47547,Dalheimpad, 5625 LR, Eindhoven,https://waarneming.nl/observation/371781578/
@@ -1545,7 +1545,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.39759 51.52431)",51.52431,4.39759,Landeweel, 4724 CW, Wouw,https://waarneming.nl/observation/371917065/
 "POINT (5.46045 51.3459)",51.34590,5.46045,Wilhelminapark, 5554 JJ, Valkenswaard,https://waarneming.nl/observation/372376932/
 "POINT (5.06656 51.57834)",51.57834,5.06656,Goirkekanaaldijk, 5049 BT, Tilburg,https://waarneming.nl/observation/371797796/
-"POINT (4.83412 51.73035)",51.73035,4.83412,4924 AA, Drimmelen,https://waarneming.nl/observation/371818351/
+"POINT (4.83412 51.73035)",51.73035,4.83412,,4924 AA, Drimmelen,https://waarneming.nl/observation/371818351/
 "POINT (5.36255 51.71034)",51.71034,5.36255,Bredestraat, 5242 CD, Rosmalen,https://waarneming.nl/observation/372398658/
 "POINT (5.42587 51.40906)",51.40906,5.42587,De Run, 5503 LS, Veldhoven,https://waarneming.nl/observation/371914358/
 "POINT (5.49932 51.4236)",51.42360,5.49932,Heezerweg, 5643 KC, Eindhoven,https://waarneming.nl/observation/371830297/
@@ -1565,7 +1565,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.7002 51.3838)",51.38380,5.70020,Garsteweg, 5712 ML, Someren,https://waarneming.nl/observation/371955728/
 "POINT (4.5787 51.56295)",51.56295,4.57870,Oude Bredasepostbaan, 4741 SK, Hoeven,https://waarneming.nl/observation/372054081/
 "POINT (5.0029 51.57959)",51.57959,5.00290,Hillegomlaan, 5045 AD, Tilburg,https://waarneming.nl/observation/371969438/
-"POINT (5.5054 51.52193)",51.52193,5.50540,5694 CZ, Son en Breugel,https://waarneming.nl/observation/372660563/
+"POINT (5.5054 51.52193)",51.52193,5.50540,,5694 CZ, Son en Breugel,https://waarneming.nl/observation/372660563/
 "POINT (5.46508 51.43542)",51.43542,5.46508,Sophia van Wurtemberglaan, 5616 BN, Eindhoven,https://waarneming.nl/observation/371983321/
 "POINT (4.28434 51.51752)",51.51752,4.28434,Langstraat, 4661 SE, Halsteren,https://waarneming.nl/observation/372009121/
 "POINT (5.70782 51.38426)",51.38426,5.70782,Tuinstraat, 5711 AG, Someren,https://waarneming.nl/observation/372012534/
@@ -1636,7 +1636,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.56551 51.52779)",51.52779,4.56551,Zundertseweg, 4715 CK, Rucphen,https://waarneming.nl/observation/372560791/
 "POINT (4.36385 51.54884)",51.54884,4.36385,Gagelweg, 4651 VL, Steenbergen,https://waarneming.nl/observation/372541756/
 "POINT (5.49628 51.43358)",51.43358,5.49628,van Wassenhovestraat, 5613 LK, Eindhoven,https://waarneming.nl/observation/372593090/
-"POINT (4.31594 51.51661)",51.51661,4.31594,4614 PJ, Bergen op Zoom,https://waarneming.nl/observation/372565619/
+"POINT (4.31594 51.51661)",51.51661,4.31594,,4614 PJ, Bergen op Zoom,https://waarneming.nl/observation/372565619/
 "POINT (5.04707 51.53347)",51.53347,5.04707,Maidstone, 5052 RD, Tilburg,https://waarneming.nl/observation/372540610/
 "POINT (4.31162 51.58973)",51.58973,4.31162,West-Havendijk, 4651 VZ, Welberg,https://waarneming.nl/observation/372541044/
 "POINT (4.75455 51.60958)",51.60958,4.75455,Franse Akker, 4824 AL, Breda,https://waarneming.nl/observation/372542457/
@@ -1663,7 +1663,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.45693 51.51211)",51.51211,4.45693,Van Eedenlaan, 4707 LB, Roosendaal,https://waarneming.nl/observation/372819791/
 "POINT (5.29454 51.34273)",51.34273,5.29454,Roten, 5521 RD, Eersel,https://waarneming.nl/observation/372883854/
 "POINT (4.4141 51.64836)",51.64836,4.41410,Slobbegorsedijk, 4794 RR, Heijningen,https://waarneming.nl/observation/372829557/
-"POINT (4.71626 51.59296)",51.59296,4.71626,4841 BL, Prinsenbeek,https://waarneming.nl/observation/372923614/
+"POINT (4.71626 51.59296)",51.59296,4.71626,,4841 BL, Prinsenbeek,https://waarneming.nl/observation/372923614/
 "POINT (4.96248 51.77148)",51.77148,4.96248,de Ridderstraat, 4286 BL, Almkerk,https://waarneming.nl/observation/372914148/
 "POINT (4.89341 51.54437)",51.54437,4.89341,Korte Hoogstraat, 5124 RE, Molenschot,https://waarneming.nl/observation/372867096/
 "POINT (4.56499 51.52796)",51.52796,4.56499,Zundertseweg, 4715 CK, Rucphen,https://waarneming.nl/observation/372918410/
@@ -1735,7 +1735,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.95971 51.73004)",51.73004,4.95971,Dorpsstraat, 4271 AA, Dussen,https://waarneming.nl/observation/373599427/
 "POINT (5.22949 51.3855)",51.38550,5.22949,Molenweg, 5531 PN, Bladel,https://waarneming.nl/observation/373684354/
 "POINT (4.82072 51.58701)",51.58701,4.82072,Heerbaan, 4817 NL, Breda,https://waarneming.nl/observation/373382805/
-"POINT (4.79748 51.57066)",51.57066,4.79748,4834 XH, Breda,https://waarneming.nl/observation/373383668/
+"POINT (4.79748 51.57066)",51.57066,4.79748,,4834 XH, Breda,https://waarneming.nl/observation/373383668/
 "POINT (4.81179 51.59129)",51.59129,4.81179,Voorvang, 4817 DH, Breda,https://waarneming.nl/observation/373389664/
 "POINT (4.46134 51.527)",51.52700,4.46134,Nispensestraat, 4701 CV, Roosendaal,https://waarneming.nl/observation/373402394/
 "POINT (5.65372 51.42564)",51.42564,5.65372,Broekkant, 5715 PR, Lierop,https://waarneming.nl/observation/373423185/

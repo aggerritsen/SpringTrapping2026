@@ -463,7 +463,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.97281 50.93703)",50.93703,5.97281,Zuid-Hollandlaan, 6443 AG, Brunssum,https://waarneming.nl/observation/368331486/
 "POINT (5.83786 50.99906)",50.99906,5.83786,Fischerpad, 6142 BT, Einighausen,https://waarneming.nl/observation/368205987/
 "POINT (5.90033 51.1173)",51.11730,5.90033,Caulitenstraat, 6112 AL, Sint Joost,https://waarneming.nl/observation/368231730/
-"POINT (5.85841 51.06161)",51.06161,5.85841,6114 NC, Susteren,https://waarneming.nl/observation/368301803/
+"POINT (5.85841 51.06161)",51.06161,5.85841,,6114 NC, Susteren,https://waarneming.nl/observation/368301803/
 "POINT (5.78715 51.04654)",51.04654,5.78715,Lookerweg, 6124 BM, Papenhoven,https://waarneming.nl/observation/368321793/
 "POINT (5.72822 50.86094)",50.86094,5.72822,Lovendaalhoeve, 6225 AG, Maastricht,https://waarneming.nl/observation/368328053/
 "POINT (5.81068 50.96294)",50.96294,5.81068,Vouershof, 6161 DB, Geleen,https://waarneming.nl/observation/368328511/
@@ -845,7 +845,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.83456 51.11335)",51.11335,5.83456,Soldatenpad, 6109 AC, Ohé en Laak,https://waarneming.nl/observation/375691065/
 "POINT (6.00184 51.25613)",51.25613,6.00184,Kleinhanssum, 6086 NH, Neer,https://waarneming.nl/observation/375759823/
 "POINT (5.8452 51.14947)",51.14947,5.84520,Aan De Maas, 3640, Kessenich,https://waarneming.nl/observation/375783649/
-"POINT (6.08241 51.32454)",51.32454,6.08241,5991 EN, Baarlo,https://waarneming.nl/observation/375778947/
+"POINT (6.08241 51.32454)",51.32454,6.08241,,5991 EN, Baarlo,https://waarneming.nl/observation/375778947/
 "POINT (5.82096 50.96239)",50.96239,5.82096,Rijksweg Zuid, 6161 BV, Geleen,https://waarneming.nl/observation/375854288/
 "POINT (5.89516 51.49347)",51.49347,5.89516,Gezellenbaan, 5813 EA, Ysselsteyn,https://waarneming.nl/observation/375886354/
 "POINT (6.17586 51.33549)",51.33549,6.17586,Abbé Pierrelaan, 5932 NA, Tegelen,https://waarneming.nl/observation/375899086/
@@ -933,7 +933,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.18874 51.36349)",51.36349,6.18874,Wethouder Lommenstraat, 5913 RS, Blerick,https://waarneming.nl/observation/376932535/
 "POINT (5.70687 50.84335)",50.84335,5.70687,Paus Leo XIII plein, 6221 VK, Maastricht,https://waarneming.nl/observation/376966348/
 "POINT (5.71302 50.84807)",50.84807,5.71302,Hunnenweg, 6224 JP, Maastricht,https://waarneming.nl/observation/377060998/
-"POINT (6.03817 51.51005)",51.51005,6.03817,5808 CD, Oirlo,https://waarneming.nl/observation/377037483/
+"POINT (6.03817 51.51005)",51.51005,6.03817,,5808 CD, Oirlo,https://waarneming.nl/observation/377037483/
 "POINT (5.68417 50.84585)",50.84585,5.68417,Polvertorenplein, 6211 MZ, Maastricht,https://waarneming.nl/observation/377403691/
 "POINT (5.68775 50.83177)",50.83177,5.68775,Ganzendries, 6212 ND, Maastricht,https://waarneming.nl/observation/377006209/
 "POINT (5.96443 50.91974)",50.91974,5.96443,Marshallsingel, 6414 GN, Heerlen,https://waarneming.nl/observation/376997727/
@@ -1141,7 +1141,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.02603 50.90885)",50.90885,6.02603,Oude Landgraaf, 6373 BB, Landgraaf,https://waarneming.nl/observation/377924315/
 "POINT (5.83268 50.97509)",50.97509,5.83268,Geenstraat, 6162 XV, Geleen,https://waarneming.nl/observation/377941032/
 "POINT (5.73006 50.7751)",50.77510,5.73006,Uit de Pateel, 6245 SJ, Mariadorp,https://waarneming.nl/observation/377942367/
-"POINT (5.74911 50.83688)",50.83688,5.74911,6267 NL, Cadier en Keer,https://waarneming.nl/observation/377962935/
+"POINT (5.74911 50.83688)",50.83688,5.74911,,6267 NL, Cadier en Keer,https://waarneming.nl/observation/377962935/
 "POINT (5.73971 50.84182)",50.84182,5.73971,Oude Steegstraat, 6227 XZ, Maastricht,https://waarneming.nl/observation/377963979/
 "POINT (6.01021 50.86577)",50.86577,6.01021,Leon Biessenstraat, 6418 TL, Heerlen,https://waarneming.nl/observation/377951286/
 "POINT (5.96364 50.95202)",50.95202,5.96364,Marshallstraat, 6441 JW, Brunssum,https://waarneming.nl/observation/377953155/
@@ -1260,7 +1260,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.66414 50.85469)",50.85469,5.66414,Tiecelijnstraat, 6217 VG, Maastricht,https://waarneming.nl/observation/380550038/
 "POINT (5.68688 51.2379)",51.23790,5.68688,Frans Halslaan, 6006 PJ, Weert,https://waarneming.nl/observation/379626295/
 "POINT (5.70874 51.19914)",51.19914,5.70874,Bergerothweg, 6039 AN, Stramproy,https://waarneming.nl/observation/379648689/
-"POINT (5.89992 51.10972)",51.10972,5.89992,6111 AC, Sint Joost,https://waarneming.nl/observation/379772594/
+"POINT (5.89992 51.10972)",51.10972,5.89992,,6111 AC, Sint Joost,https://waarneming.nl/observation/379772594/
 "POINT (5.69497 50.8634)",50.86340,5.69497,Weidmanstraat, 6219 BV, Maastricht,https://waarneming.nl/observation/379620867/
 "POINT (5.89117 51.44199)",51.44199,5.89117,In de Paardestal, 5766 PV, Griendtsveen,https://waarneming.nl/observation/380134369/
 "POINT (5.88274 51.34401)",51.34401,5.88274,Jan Truijenstraat, 5768 CB, Meijel,https://waarneming.nl/observation/379636219/
@@ -1318,7 +1318,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.15843 51.38649)",51.38649,6.15843,Rijnaakkade, 5928 PT, Blerick,https://waarneming.nl/observation/380653820/
 "POINT (5.96232 50.93243)",50.93243,5.96232,Wieënweg, 6445 CE, Brunssum,https://waarneming.nl/observation/379975955/
 "POINT (6.11345 51.34273)",51.34273,6.11345,Galeiweg, 5991 RD, Baarlo,https://waarneming.nl/observation/379978118/
-"POINT (5.90825 51.24184)",51.24184,5.90825,6093 NB, Heythuysen,https://waarneming.nl/observation/380859879/
+"POINT (5.90825 51.24184)",51.24184,5.90825,,6093 NB, Heythuysen,https://waarneming.nl/observation/380859879/
 "POINT (5.98505 50.92316)",50.92316,5.98505,Schaapskooiweg, 6414 EL, Heerlen,https://waarneming.nl/observation/380039760/
 "POINT (6.14215 51.34511)",51.34511,6.14215,Muntstraat, 5931 LV, Tegelen,https://waarneming.nl/observation/379994804/
 "POINT (5.75919 50.96508)",50.96508,5.75919,Kruisstraat, 6171 GH, Stein,https://waarneming.nl/observation/380130382/
@@ -1421,7 +1421,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.68777 51.26162)",51.26162,5.68777,Hillenraad, 6002 VV, Weert,https://waarneming.nl/observation/380457385/
 "POINT (5.74097 51.25998)",51.25998,5.74097,Kraanweg, 6004 RC, Weert,https://waarneming.nl/observation/380461659/
 "POINT (5.98019 50.89907)",50.89907,5.98019,Heldevierlaan, 6415 SB, Heerlen,https://waarneming.nl/observation/380452078/
-"POINT (5.97349 50.89244)",50.89244,5.97349,6412 XA, Heerlen,https://waarneming.nl/observation/380452044/
+"POINT (5.97349 50.89244)",50.89244,5.97349,,6412 XA, Heerlen,https://waarneming.nl/observation/380452044/
 "POINT (5.73001 50.87986)",50.87986,5.73001,Weert, 6222 PG, Maastricht,https://waarneming.nl/observation/380508430/
 "POINT (5.80924 50.76722)",50.76722,5.80924,Boyeweg, 6255 AD, Noorbeek,https://waarneming.nl/observation/380496754/
 "POINT (5.78205 50.97624)",50.97624,5.78205,Nijverheidsweg, 6171 AZ, Stein,https://waarneming.nl/observation/380454579/
@@ -1564,7 +1564,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (6.01023 51.20798)",51.20798,6.01023,Broekhin Noord, 6042 EE, Roermond,https://waarneming.nl/observation/380923321/
 "POINT (5.73831 50.7687)",50.76870,5.73831,Waardhoff, 6245 SH, Mesch,https://waarneming.nl/observation/380949134/
 "POINT (6.05855 51.31287)",51.31287,6.05855,Donk, 5995 PL, Kessel,https://waarneming.nl/observation/380929472/
-"POINT (5.98382 50.89013)",50.89013,5.98382,6415 AA, Heerlen,https://waarneming.nl/observation/380983190/
+"POINT (5.98382 50.89013)",50.89013,5.98382,,6415 AA, Heerlen,https://waarneming.nl/observation/380983190/
 "POINT (6.0095 50.7616)",50.76160,6.00950,Gemmenicherweg, 6291 BT, Vaals,https://waarneming.nl/observation/382818905/
 "POINT (5.71438 50.89266)",50.89266,5.71438,Stegelwegje, 6222 PD, Itteren,https://waarneming.nl/observation/380960303/
 "POINT (5.96451 51.23986)",51.23986,5.96451,Terbetenweg, 6083 AG, Nunhem,https://waarneming.nl/observation/380976389/
@@ -1665,7 +1665,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (5.69666 50.82378)",50.82378,5.69666,Hoge Kanaaldijk, 6212 NB, Maastricht,https://waarneming.nl/observation/382186524/
 "POINT (5.98977 51.34018)",51.34018,5.98977,Vosberg, 5981 NM, Panningen,https://waarneming.nl/observation/382214929/
 "POINT (5.95597 50.88797)",50.88797,5.95597,Eikendermolenweg, 6411 RW, Heerlen,https://waarneming.nl/observation/382207030/
-"POINT (5.74473 50.90286)",50.90286,5.74473,6241 NN, Bunde,https://waarneming.nl/observation/383117441/
+"POINT (5.74473 50.90286)",50.90286,5.74473,,6241 NN, Bunde,https://waarneming.nl/observation/383117441/
 "POINT (6.22234 51.46635)",51.46635,6.22234,Daalweg, 5944 BD, Lomm,https://waarneming.nl/observation/382291612/
 "POINT (6.17672 51.51328)",51.51328,6.17672,Twistedenerweg, 5856 CL, Wellerlooi,https://waarneming.nl/observation/382297239/
 "POINT (6.02278 50.87742)",50.87742,6.02278,Overstehofweg, 6372 VG, Landgraaf,https://waarneming.nl/observation/382387791/

@@ -276,7 +276,7 @@
       const div = document.createElement("div");
       div.className = "item";
 
-      const title = data.street || "(no street)";
+      const title = data.street || "(geen adres)";
       const addressLine = buildAddress(data);
       const url = data.description || "";
 
