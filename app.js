@@ -214,7 +214,7 @@
       toggleBtn.textContent = "Map";
     } else {
       sidebarEl.classList.remove("open");
-      toggleBtn.textContent = "List";
+      toggleBtn.textContent = "Lijst";
     }
 
     // Give CSS transition time, then resize Leaflet
