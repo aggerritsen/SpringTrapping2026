@@ -37,7 +37,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.33562 51.79574)",51.79574,4.33562,Oud Piershilseweg, 3265 LE, Piershil,https://waarneming.nl/observation/346594915/
 "POINT (4.55461 51.84548)",51.84548,4.55461,Willem-Alexanderplantsoen, 2991 NC, Barendrecht,https://waarneming.nl/observation/346674376/
 "POINT (4.65859 51.82157)",51.82157,4.65859,W.H. Vliegenstraat, 3332 CV, Zwijndrecht,https://waarneming.nl/observation/346858955/
-"POINT (4.3317 51.86653)",51.86653,4.33170,,3197 LB, Rotterdam,https://waarneming.nl/observation/347431304/
+"POINT (4.3317 51.86653)",51.86653,4.33170,3197 LB, Rotterdam,https://waarneming.nl/observation/347431304/
 "POINT (4.50901 52.06553)",52.06553,4.50901,Vuurdoornpark, 2724 HG, Zoetermeer,https://waarneming.nl/observation/347449123/
 "POINT (4.56682 51.92206)",51.92206,4.56682,Brahmsstraat, 2901 JE, Capelle aan den IJssel,https://waarneming.nl/observation/354869606/
 "POINT (4.56593 51.80054)",51.80054,4.56593,Binnenkruier, 3297 TA, Puttershoek,https://waarneming.nl/observation/347617561/
@@ -70,7 +70,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.23824 51.86737)",51.86737,4.23824,Burggraafstraat, 3218 VB, Heenvliet,https://waarneming.nl/observation/352783285/
 "POINT (4.19447 51.7115)",51.71150,4.19447,Oudelandsedijk, 3255 LN, Oude-Tonge,https://waarneming.nl/observation/353389901/
 "POINT (4.53585 51.89015)",51.89015,4.53585,Darinckdelversstraat, 3078 WE, Rotterdam,https://waarneming.nl/observation/353315990/
-"POINT (4.23695 51.90974)",51.90974,4.23695,,3181 TB, Rozenburg,https://waarneming.nl/observation/353822445/
+"POINT (4.23695 51.90974)",51.90974,4.23695,3181 TB, Rozenburg,https://waarneming.nl/observation/353822445/
 "POINT (4.00884 51.83124)",51.83124,4.00884,Haveneind, 3252 LE, Goedereede,https://waarneming.nl/observation/353924383/
 "POINT (4.47006 52.04449)",52.04449,4.47006,Raminhout, 2719 KM, Zoetermeer,https://waarneming.nl/observation/353880588/
 "POINT (4.33341 51.82407)",51.82407,4.33341,Moleneind, 3209 AK, Hekelingen,https://waarneming.nl/observation/369160514/
@@ -259,7 +259,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.63323 51.89387)",51.89387,4.63323,Onder de Waal, 2931 AS, Krimpen aan de Lek,https://waarneming.nl/observation/372688002/
 "POINT (4.49894 51.79781)",51.79781,4.49894,Landheerlaan, 3271 TN, Mijnsheerenland,https://waarneming.nl/observation/372849461/
 "POINT (4.46619 52.0542)",52.05420,4.46619,Fivelingo, 2716 BB, Zoetermeer,https://waarneming.nl/observation/372722091/
-"POINT (4.64366 51.84282)",51.84282,4.64366,,3341 GC, Hendrik-Ido-Ambacht,https://waarneming.nl/observation/372815138/
+"POINT (4.64366 51.84282)",51.84282,4.64366,3341 GC, Hendrik-Ido-Ambacht,https://waarneming.nl/observation/372815138/
 "POINT (4.70467 52.0355)",52.03550,4.70467,Oosthoef, 2804 ST, Gouda,https://waarneming.nl/observation/372874880/
 "POINT (4.74521 52.0752)",52.07520,4.74521,Emmakade, 2411 JH, Bodegraven,https://waarneming.nl/observation/372866388/
 "POINT (4.39276 51.82129)",51.82129,4.39276,Lijster, 3263 RC, Oud-Beijerland,https://waarneming.nl/observation/372867550/
@@ -315,7 +315,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.53952 51.84899)",51.84899,4.53952,Kempenaar, 2991 PL, Barendrecht,https://waarneming.nl/observation/374316816/
 "POINT (4.9374 51.83937)",51.83937,4.93740,Kleine Schelluinsekade, 4204 TZ, Gorinchem,https://waarneming.nl/observation/374381035/
 "POINT (3.86153 51.80164)",51.80164,3.86153,Westeinde, 3253 LW, Ouddorp,https://waarneming.nl/observation/374346206/
-"POINT (4.68451 51.74824)",51.74824,4.68451,,3329 KR, Dordrecht,https://waarneming.nl/observation/374418138/
+"POINT (4.68451 51.74824)",51.74824,4.68451,3329 KR, Dordrecht,https://waarneming.nl/observation/374418138/
 "POINT (4.97739 51.8312)",51.83120,4.97739,Stationsweg, 4201 HL, Gorinchem,https://waarneming.nl/observation/374454284/
 "POINT (4.32066 52.02981)",52.02981,4.32066,Prinses Beatrixlaan, 2287 SE, Rijswijk,https://waarneming.nl/observation/374514082/
 "POINT (4.32328 52.04008)",52.04008,4.32328,Henriette Roland Holstlaan, 2283 HC, Rijswijk,https://waarneming.nl/observation/374513636/
@@ -468,7 +468,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.54605 51.85164)",51.85164,4.54605,Binnenlaantje, 2991 EC, Barendrecht,https://waarneming.nl/observation/377887577/
 "POINT (4.70633 51.78711)",51.78711,4.70633,Abeelstraat, 3329 AA, Dordrecht,https://waarneming.nl/observation/377684409/
 "POINT (4.60358 51.93476)",51.93476,4.60358,Reitdiep, 2904 RD, Capelle aan den IJssel,https://waarneming.nl/observation/377691509/
-"POINT (4.9733 51.84124)",51.84124,4.97330,,4205 CT, Gorinchem,https://waarneming.nl/observation/377694393/
+"POINT (4.9733 51.84124)",51.84124,4.97330,4205 CT, Gorinchem,https://waarneming.nl/observation/377694393/
 "POINT (4.61215 51.88603)",51.88603,4.61215,Electropark, 2983 EN, Slikkerveer,https://waarneming.nl/observation/377702010/
 "POINT (4.60759 51.88872)",51.88872,4.60759,Reijerweg, 2983 AT, Slikkerveer,https://waarneming.nl/observation/377703144/
 "POINT (4.65978 51.80273)",51.80273,4.65978,Bosboom-Toussaintstraat, 3314 GC, Dordrecht,https://waarneming.nl/observation/377717193/
@@ -510,6 +510,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.57109 51.81636)",51.81636,4.57109,Lindtsedijk, 2995 XL, Heerjansdam,https://waarneming.nl/observation/379307693/
 "POINT (4.57744 51.81647)",51.81647,4.57744,Lindtsedijk, 2995 XL, Heerjansdam,https://waarneming.nl/observation/379376481/
 "POINT (4.23374 51.91279)",51.91279,4.23374,Zanddijk, 3181 HW, Rozenburg,https://waarneming.nl/observation/379272315/
+"POINT (4.74609 52.08872)",52.08872,4.74609,Sportlaan, 2411 XD, Bodegraven,https://waarneming.nl/observation/379287488/
 "POINT (4.69587 51.76032)",51.76032,4.69587,Noorder Elsweg, 3329 KH, Dordrecht,https://waarneming.nl/observation/380128242/
 "POINT (4.35359 52.11309)",52.11309,4.35359,Laan van Koot, 2244 AV, Wassenaar,https://waarneming.nl/observation/379365708/
 "POINT (4.84087 51.94665)",51.94665,4.84087,Robert Kochlaan, 2871 LH, Schoonhoven,https://waarneming.nl/observation/379317451/
@@ -556,7 +557,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.54601 51.85164)",51.85164,4.54601,Binnenlaantje, 2991 EC, Barendrecht,https://waarneming.nl/observation/379915670/
 "POINT (4.43264 51.81918)",51.81918,4.43264,Multatulipad, 3261 SM, Oud-Beijerland,https://waarneming.nl/observation/379921535/
 "POINT (4.40129 52.10135)",52.10135,4.40129,De Haar, 2261 ZB, Leidschendam,https://waarneming.nl/observation/380228716/
-"POINT (4.36642 51.70134)",51.70134,4.36642,,3257 LA, Ooltgensplaat,https://waarneming.nl/observation/380293757/
+"POINT (4.36642 51.70134)",51.70134,4.36642,3257 LA, Ooltgensplaat,https://waarneming.nl/observation/380293757/
 "POINT (4.58636 51.87119)",51.87119,4.58636,Meidoornlaan, 2982 BG, Slikkerveer,https://waarneming.nl/observation/380545349/
 "POINT (4.62424 51.81354)",51.81354,4.62424,Kort-Ambachtlaan, 3333 EP, Zwijndrecht,https://waarneming.nl/observation/380030367/
 "POINT (4.61816 51.95855)",51.95855,4.61816,Waterschapsweg, 2911 CR, Nieuwerkerk aan den IJssel,https://waarneming.nl/observation/380111493/
@@ -577,7 +578,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.61921 51.96207)",51.96207,4.61921,Dinkel, 2911 ED, Nieuwerkerk aan den IJssel,https://waarneming.nl/observation/380198490/
 "POINT (4.72951 51.84356)",51.84356,4.72951,Pim Louwaarspad, 3356 LR, Papendrecht,https://waarneming.nl/observation/380209751/
 "POINT (4.59797 51.91545)",51.91545,4.59797,Nieuwe Tiendweg, 2923 BS, Krimpen aan den IJssel,https://waarneming.nl/observation/380142855/
-"POINT (4.97332 51.84123)",51.84123,4.97332,,4205 CT, Gorinchem,https://waarneming.nl/observation/380188343/
+"POINT (4.97332 51.84123)",51.84123,4.97332,4205 CT, Gorinchem,https://waarneming.nl/observation/380188343/
 "POINT (3.86399 51.75758)",51.75758,3.86399,Middelplaat, 3253 MU, Ouddorp,https://waarneming.nl/observation/380218585/
 "POINT (4.42201 51.86165)",51.86165,4.42201,Kerklaan, 3161 KH, Rhoon,https://waarneming.nl/observation/380221382/
 "POINT (4.38282 52.1324)",52.13240,4.38282,Schouwweg, 2243 BG, Wassenaar,https://waarneming.nl/observation/380229220/
@@ -732,7 +733,7 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.56247 51.78797)",51.78797,4.56247,Fazant, 3299 BS, Maasdam,https://waarneming.nl/observation/382060844/
 "POINT (4.99359 51.84987)",51.84987,4.99359,Kerkeind, 4241 XC, Arkel,https://waarneming.nl/observation/382088500/
 "POINT (4.12035 51.98227)",51.98227,4.12035,Strandweg, 3151 HD, Hoek van Holland,https://waarneming.nl/observation/382061234/
-"POINT (4.36092 51.7012)",51.70120,4.36092,,3257 LA, Ooltgensplaat,https://waarneming.nl/observation/382137179/
+"POINT (4.36092 51.7012)",51.70120,4.36092,3257 LA, Ooltgensplaat,https://waarneming.nl/observation/382137179/
 "POINT (4.36592 51.70195)",51.70195,4.36592,N59, 3257 XS, Ooltgensplaat,https://waarneming.nl/observation/382137549/
 "POINT (4.71662 51.83222)",51.83222,4.71662,Steilsteven, 3356 MC, Papendrecht,https://waarneming.nl/observation/382197429/
 "POINT (4.68728 51.75492)",51.75492,4.68728,Nieuwe Merwedeweg, 3329 KM, Dordrecht,https://waarneming.nl/observation/382595133/
@@ -751,4 +752,11 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.43288 51.81823)",51.81823,4.43288,Heijermansstraat, 3261 SW, Oud-Beijerland,https://waarneming.nl/observation/382990974/
 "POINT (4.37182 51.76109)",51.76109,4.37182,Dijkgraaf van der Lindenpad, 3284 WC, Zuid-Beijerland,https://waarneming.nl/observation/383158745/
 "POINT (4.42697 51.81706)",51.81706,4.42697,Boezemsingel, 3261 BD, Oud-Beijerland,https://waarneming.nl/observation/383207649/
-"POINT (4.24296 52.07401)",52.07401,4.24296,Kraaienlaan, 2566 RK, Den Haag, https://waarneming.nl/observation/374111963/
+"POINT (4.63518 52.16778)",52.16778,4.63518,Bateweg, 2481 AN, Woubrugge,https://waarneming.nl/observation/347843991/
+"POINT (4.63748 52.16857)",52.16857,4.63748,Comriekade, 2481 AE, Woubrugge,https://waarneming.nl/observation/356119579/
+"POINT (4.70891 52.19336)",52.19336,4.70891,F.J. Nuijensplein, 2461 RX, Langeraar,https://waarneming.nl/observation/368525142/
+"POINT (4.64382 52.20988)",52.20988,4.64382,Praam, 2377 BW, Oude Wetering,https://waarneming.nl/observation/372035622/
+"POINT (4.22876 51.95128)",51.95128,4.22876,Bandijkweg, 2676 LH, Maasdijk,https://waarneming.nl/observation/380872106/
+"POINT (4.39789 51.90833)",51.90833,4.39789,Stadhouderslaan, 3116 HK, Schiedam,https://waarneming.nl/observation/377599158/
+"POINT (4.3475 51.94114)",51.94114,4.34750,Wilgendreef, 3137 CZ, Vlaardingen,https://waarneming.nl/observation/381389526/
+"POINT (4.34877 51.93367)",51.93367,4.34877,Lepelaarsingel, 3136 NL, Vlaardingen,https://waarneming.nl/observation/380705227/
