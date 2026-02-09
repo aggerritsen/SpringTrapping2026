@@ -143,7 +143,9 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.39789 51.90833)",51.90833,4.39789,Stadhouderslaan, 3116 HK, Schiedam,https://waarneming.nl/observation/377599158/
 "POINT (4.48519 52.05179)",52.05179,4.48519,Graaf Janstraat, 2713 CH, Zoetermeer,https://waarneming.nl/observation/384715884/
 "POINT (4.3394 51.9405)",51.94050,4.33940,Begraafplaats, 3137 CR, Vlaardingen,https://waarneming.nl/observation/385511939/
-"POINT (4.32421 51.93371)",51.93371,4.32421,Broekpolderpad,, Vlaardingen,https://waarneming.nl/observation/385512195/
+"POINT (4.32421 51.93371)",51.93371,4.32421,Broekpolderpad, ,Vlaardingen,https://waarneming.nl/observation/385512195/
 "POINT (4.32421 51.93371)",51.93371,4.32421,Fonteinkruid, 3137 WL, Vlaardingen,https://waarneming.nl/observation/385512195/
 "POINT (4.74521 52.0752)",52.07520,4.74521,Emmakade, 2411 JH, Bodegraven,https://waarneming.nl/observation/372866388/
 "POINT (4.74609 52.08872)",52.08872,4.74609,Sportlaan, 2411 XD, Bodegraven,https://waarneming.nl/observation/379287488/
+"POINT (4.4087 52.14519)",52.14519,4.40870,Van Montfortlaan, 2241 JK, Wassenaar,https://waarneming.nl/observation/385723882/
+"POINT (4.370863 52.118849)",52.118849,4.370863,Oud Wassenaarseweg, 2243 BT, Wassenaar,https://waarneming.nl/observation/385723975/
