@@ -4,7 +4,7 @@
    - description currently holds the URL (waarneming.nl)
 
    URL:
-   - ?dataset=focus|noord|midden|zh|zl|nb|li
+   - ?dataset=focus|hotspot|noord|midden|zh|zl|nb|li
 */
 
 (function () {
@@ -13,6 +13,7 @@
   // =========================================================
   const DATASETS = {
     focus:  { label: "Focus Gemeenten",  file: "./data_focus_gemeenten.csv" },
+    hotspot:{ label: "Focus Hot Spots",  file: "./data_hotspots.csv" },
     noord:  { label: "Noord-Nederland",  file: "./data_noord_nederland.csv" },
     midden: { label: "Midden-Nederland", file: "./data_midden_nederland.csv" },
     zh:     { label: "Zuid-Holland",     file: "./data_zuid_holland.csv" },
