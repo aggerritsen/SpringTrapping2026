@@ -202,11 +202,20 @@
   const sidebarEl = document.getElementById("sidebar");
   const toggleBtn = document.getElementById("togglePanel");
   const openListBtn = document.getElementById("openListBtn");
+  const aboutBtnEl = document.getElementById("aboutBtn");
+  const aboutModalEl = document.getElementById("aboutModal");
+  const aboutCloseBtnEl = document.getElementById("aboutCloseBtn");
 
   // Only run hover pan on devices that actually support hover
   const CAN_HOVER = window.matchMedia && window.matchMedia("(hover: hover)").matches;
   const IS_MOBILE_LAYOUT = () =>
     window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+
+  function setAboutOpen(open) {
+    if (!aboutModalEl) return;
+    aboutModalEl.classList.toggle("open", !!open);
+    aboutModalEl.setAttribute("aria-hidden", open ? "false" : "true");
+  }
 
   function setPanelOpen(open) {
     if (!sidebarEl || !toggleBtn) return;
@@ -240,6 +249,30 @@
       setPanelOpen(true);
     });
   }
+
+  if (aboutBtnEl) {
+    aboutBtnEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      setAboutOpen(true);
+    });
+  }
+
+  if (aboutCloseBtnEl) {
+    aboutCloseBtnEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      setAboutOpen(false);
+    });
+  }
+
+  if (aboutModalEl) {
+    aboutModalEl.addEventListener("click", (e) => {
+      if (e.target === aboutModalEl) setAboutOpen(false);
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setAboutOpen(false);
+  });
 
   function buildAddress(d) {
     const street = normalizeSpaces(d.street || "");
