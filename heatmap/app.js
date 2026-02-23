@@ -199,7 +199,7 @@
     heatLayer = L.heatLayer(heatPoints, getHeatOptions()).addTo(map);
 
     if (countEl) {
-      countEl.textContent = `Loaded ${heatPoints.length} observations for "${DATASETS[currentDatasetKey].label}".`;
+      countEl.textContent = `${heatPoints.length} observations geladen voor "${DATASETS[currentDatasetKey].label}".`;
     }
   }
 
