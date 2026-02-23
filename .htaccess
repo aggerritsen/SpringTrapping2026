@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Keep real files/directories untouched.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Pretty route for dataset heatmaps, e.g. /heatmap/focus
+RewriteRule ^heatmap/([A-Za-z0-9_-]+)/?$ heatmap/index.html?dataset=$1 [L,QSA,NC]
+</IfModule>

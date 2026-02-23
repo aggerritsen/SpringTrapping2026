@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Spring Trapping 2026 - Heatmap</title>
+  <link rel="icon" type="image/png" href="../icon.png" />
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <style>
+    :root {
+      --sidebar-w: 360px;
+      --border: #e5e5e5;
+      --shadow: 0 8px 24px rgba(0,0,0,.12);
+      --radius: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #fff;
+    }
+
+    .layout {
+      height: 100%;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+    }
+
+    #sidebar {
+      border-right: 1px solid var(--border);
+      overflow: auto;
+      padding: 12px;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    .mobile-header {
+      display: none;
+    }
+
+    .row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .topbar input,
+    .topbar select,
+    .topbar button,
+    .topbar a {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+
+    .topbar a {
+      display: block;
+      text-decoration: none;
+      color: #222;
+      text-align: center;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #444;
+      margin-top: 6px;
+    }
+
+    .hint {
+      color: #666;
+      font-size: 12px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .count {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #333;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ececec;
+      background: #fafafa;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      #map {
+        height: 100vh;
+        width: 100vw;
+      }
+
+      #sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-right: none;
+        border-top: 1px solid var(--border);
+        border-radius: var(--radius) var(--radius) 0 0;
+        background: #fff;
+        box-shadow: var(--shadow);
+        max-height: 52vh;
+        transform: translateY(calc(52vh - 52px));
+        transition: transform 180ms ease;
+        z-index: 1000;
+      }
+
+      #sidebar.open {
+        transform: translateY(0);
+      }
+
+      .mobile-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .mobile-title {
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      #togglePanel {
+        width: auto;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside id="sidebar" class="open">
+      <div class="mobile-header">
+        <div class="mobile-title">Heatmap</div>
+        <button id="togglePanel" type="button">Kaart</button>
+      </div>
+
+      <div class="title">Spring Trapping 2026 Heatmap</div>
+
+      <div class="topbar row">
+        <select id="datasetSelect">
+          <option value="focus">Focus Gemeenten</option>
+          <option value="hotspot">Focus Hot Spots</option>
+          <option value="noord">Noord-Nederland</option>
+          <option value="midden">Midden-Nederland</option>
+          <option value="zh">Zuid-Holland</option>
+          <option value="zl">Zeeland</option>
+          <option value="nb">Noord-Brabant</option>
+          <option value="li">Limburg</option>
+        </select>
+
+        <label class="label" for="radiusRange">Heat radius</label>
+        <input id="radiusRange" type="range" min="12" max="45" value="30" />
+
+        <label class="label" for="blurRange">Heat blur</label>
+        <input id="blurRange" type="range" min="10" max="40" value="22" />
+
+        <a id="openClassicMap" href="../?region=focus">Open marker/ring map</a>
+      </div>
+
+      <div id="pointCount" class="count">Loading…</div>
+      <div class="hint">
+        Every point currently has equal weight (= 1), so this visualizes location density.
+      </div>
+    </aside>
+
+    <main id="map"></main>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

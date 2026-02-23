@@ -4,7 +4,8 @@
    - description currently holds the URL (waarneming.nl)
 
    URL:
-   - ?dataset=focus|hotspot|noord|midden|zh|zl|nb|li
+   - ?region=focus|hotspot|noord|midden|zh|zl|nb|li
+   - ?dataset=... (legacy fallback)
 */
 
 (function () {
@@ -203,6 +204,7 @@
   const toggleBtn = document.getElementById("togglePanel");
   const openListBtn = document.getElementById("openListBtn");
   const aboutBtnEl = document.getElementById("aboutBtn");
+  const heatmapBtnEl = document.getElementById("heatmapBtn");
   const aboutModalEl = document.getElementById("aboutModal");
   const aboutCloseBtnEl = document.getElementById("aboutCloseBtn");
 
@@ -283,6 +285,12 @@
     const pcCity = normalizeSpaces(`${postal} ${city}`.trim());
     if (pcCity) parts.push(pcCity);
     return parts.join(", ");
+  }
+
+  function setHeatmapHref(datasetKey) {
+    if (!heatmapBtnEl) return;
+    const key = resolveDatasetKey(datasetKey);
+    heatmapBtnEl.href = `./heatmap/?dataset=${encodeURIComponent(key)}`;
   }
 
   function safeOpenPopup(item) {
@@ -412,6 +420,7 @@
     if (filterEl) filterEl.value = "";
 
     const ds = DATASETS[datasetKey] || DATASETS[DEFAULT_DATASET];
+    setHeatmapHref(datasetKey);
 
     const res = await fetch(ds.file, { cache: "no-store" });
     if (!res.ok) throw new Error(`Failed to load ${ds.file} (${res.status})`);
@@ -501,7 +510,9 @@
   if (datasetEl) {
     datasetEl.addEventListener("change", () => {
       const key = resolveDatasetKey(datasetEl.value);
-      setQueryParam("dataset", key);
+      setQueryParam("region", key);
+      setQueryParam("dataset", null);
+      setHeatmapHref(key);
       loadDataset(key).catch((err) => {
         console.error(err);
         alert(err.message || String(err));
@@ -510,8 +521,11 @@
   }
 
   // Initial dataset from URL
-  const initialKey = resolveDatasetKey(getQueryParam("dataset"));
+  const initialKey = resolveDatasetKey(getQueryParam("region") || getQueryParam("dataset"));
   if (datasetEl) datasetEl.value = initialKey;
+  setQueryParam("region", initialKey);
+  setQueryParam("dataset", null);
+  setHeatmapHref(initialKey);
 
   loadDataset(initialKey).catch((err) => {
     console.error(err);

@@ -65,7 +65,8 @@
 
     .topbar input,
     .topbar select,
-    .topbar button {
+    .topbar button,
+    .topbar a {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
@@ -73,6 +74,13 @@
       font-size: 14px;
       box-sizing: border-box;
       background: #fff;
+    }
+
+    .topbar a {
+      display: block;
+      color: #222;
+      text-align: center;
+      text-decoration: none;
     }
 
     .secondary-btn {
@@ -298,6 +306,7 @@
         </select>
 
         <input id="filter" type="text" placeholder="Filter op straat / postcode / plaats / url…" />
+        <a id="heatmapBtn" class="secondary-btn" href="./heatmap/?dataset=focus">Bekijk heatmap</a>
         <button id="aboutBtn" class="secondary-btn" type="button">Over deze kaart</button>
 
       </div>
@@ -332,20 +341,22 @@
         </p>
 
         <h3>Focusgemeenten (werkgebied samenwerkingsverband)</h3>
-        <p>kaart: <a href="/?dataset=focus">http://springtrapping.nl/?dataset=focus</a></p>
-        <p>data: <a href="/data_focus_gemeenten.csv" download="data_focus_gemeenten.csv">http://springtrapping.nl/data_focus_gemeenten.csv</a></p>
+        <p>kaart: <a href="./?region=focus">./?region=focus</a></p>
+        <p>heatmap: <a href="./heatmap/?dataset=focus">./heatmap/?dataset=focus</a></p>
+        <p>data: <a href="./data_focus_gemeenten.csv" download="data_focus_gemeenten.csv">./data_focus_gemeenten.csv</a></p>
 
         <h3>Hotspots (waarnemingen dit jaar)</h3>
-        <p>kaart: <a href="/?dataset=hotspot">http://springtrapping.nl/?dataset=hotspot</a></p>
-        <p>data: <a href="/data_hotspots.csv" download="data_hotspots.csv">http://springtrapping.nl/data_hotspots.csv</a></p>
+        <p>kaart: <a href="./?region=hotspot">./?region=hotspot</a></p>
+        <p>heatmap: <a href="./heatmap/?dataset=hotspot">./heatmap/?dataset=hotspot</a></p>
+        <p>data: <a href="./data_hotspots.csv" download="data_hotspots.csv">./data_hotspots.csv</a></p>
 
         <h3>Overige datasets</h3>
-        <p>Noord-Nederland: <a href="/?dataset=noord">kaart</a> | <a href="/data_noord_nederland.csv" download="data_noord_nederland.csv">data</a></p>
-        <p>Midden-Nederland: <a href="/?dataset=midden">kaart</a> | <a href="/data_midden_nederland.csv" download="data_midden_nederland.csv">data</a></p>
-        <p>Zuid-Holland: <a href="/?dataset=zh">kaart</a> | <a href="/data_zuid_holland.csv" download="data_zuid_holland.csv">data</a></p>
-        <p>Zeeland: <a href="/?dataset=zl">kaart</a> | <a href="/data_zeeland.csv" download="data_zeeland.csv">data</a></p>
-        <p>Noord-Brabant: <a href="/?dataset=nb">kaart</a> | <a href="/data_noord_brabant.csv" download="data_noord_brabant.csv">data</a></p>
-        <p>Limburg: <a href="/?dataset=li">kaart</a> | <a href="/data_limburg.csv" download="data_limburg.csv">data</a></p>
+        <p>Noord-Nederland: <a href="./?region=noord">kaart</a> | <a href="./heatmap/?dataset=noord">heatmap</a> | <a href="./data_noord_nederland.csv" download="data_noord_nederland.csv">data</a></p>
+        <p>Midden-Nederland: <a href="./?region=midden">kaart</a> | <a href="./heatmap/?dataset=midden">heatmap</a> | <a href="./data_midden_nederland.csv" download="data_midden_nederland.csv">data</a></p>
+        <p>Zuid-Holland: <a href="./?region=zh">kaart</a> | <a href="./heatmap/?dataset=zh">heatmap</a> | <a href="./data_zuid_holland.csv" download="data_zuid_holland.csv">data</a></p>
+        <p>Zeeland: <a href="./?region=zl">kaart</a> | <a href="./heatmap/?dataset=zl">heatmap</a> | <a href="./data_zeeland.csv" download="data_zeeland.csv">data</a></p>
+        <p>Noord-Brabant: <a href="./?region=nb">kaart</a> | <a href="./heatmap/?dataset=nb">heatmap</a> | <a href="./data_noord_brabant.csv" download="data_noord_brabant.csv">data</a></p>
+        <p>Limburg: <a href="./?region=li">kaart</a> | <a href="./heatmap/?dataset=li">heatmap</a> | <a href="./data_limburg.csv" download="data_limburg.csv">data</a></p>
         <h3>Contact adres</h3>
         <p><a href="mailto:ah@imkersleiden.nl">ah@imkersleiden.nl</a></p>
       </div>
