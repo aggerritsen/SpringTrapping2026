@@ -3,4 +3,4 @@ WKT,latitude,longitude,street,postalcode,city,description
 "POINT (4.68298 52.07371)",52.07371,4.68298, Reijerskoop, 2771 BN, Boskoop,https://waarneming.nl/observation/385475902/
 "POINT (4.68544 52.14689)",52.14689,4.68544, Weegbreestraat, 2403 VR, Alphen aan den Rijn,https://waarneming.nl/observation/383960046/
 "POINT (4.34657 52.06073)",52.06073, 4.34657, Den Burghstraat, 2275 TN, Voorburg, https://waarneming.nl/observation/386304714/
-"POINT (4.684600 52.026690 ), 52.026690, 4.684600, Groene Zoom,, Gouda, https://waarneming.nl/observation/386843782/
+"POINT (4.684600 52.026690)", 52.026690, 4.684600, Groene Zoom,, Gouda, https://waarneming.nl/observation/386843782/
