@@ -12,7 +12,7 @@
   "use strict";
 
   const DEFAULTS = {
-    c: 350,
+    c: 300,
     d_max: 12,
     A: 30,
     N0: 15,
