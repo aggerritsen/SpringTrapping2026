@@ -13,19 +13,20 @@
 
   const DEFAULTS = {
     c: 350,
-    d_max: 10,
-    A: 100,
-    N0: 1,
+    d_max: 12,
+    A: 30,
+    N0: 15,
     R_max: 4.5,
     s: 0.95,
+    p_passief: 0.3,
     p_beheer: 0.8,
     t_start: 3,
-    T: 25,
+    T: 10,
   };
 
   const SCENARIOS = {
     scenario1: "Vroeg starten met beheer",
-    scenario2: "Niets doen",
+    scenario2: "Geen actief beheer (alleen passief)",
     scenario3: "Pas ingrijpen na verzadiging",
   };
 
@@ -49,10 +50,24 @@
     { key: "N0", range: "n0Range", input: "n0Input" },
     { key: "R_max", range: "rmaxRange", input: "rmaxInput" },
     { key: "s", range: "sRange", input: "sInput" },
+    { key: "p_passief", range: "ppassiefRange", input: "ppassiefInput" },
     { key: "p_beheer", range: "pbeheerRange", input: "pbeheerInput" },
     { key: "t_start", range: "tstartRange", input: "tstartInput" },
     { key: "T", range: "tRange", input: "tInput" },
   ];
+
+  const INPUT_RULES = {
+    c: { min: 200, max: 500, integer: true },
+    d_max: { min: 2, max: 25, integer: true },
+    A: { min: 1, max: 150, integer: true },
+    N0: { min: 1, max: 150, integer: true },
+    R_max: { min: 1.1, max: 10, integer: false },
+    s: { min: 0.5, max: 0.99, integer: false },
+    p_passief: { min: 0, max: 1, integer: false },
+    p_beheer: { min: 0, max: 1, integer: false },
+    t_start: { min: 1, max: 25, integer: true },
+    T: { min: 1, max: 50, integer: true },
+  };
 
   const state = {
     params: { ...DEFAULTS },
@@ -78,6 +93,22 @@
     return Number.isFinite(n) ? n : 0;
   }
 
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function sanitizeParam(key, value) {
+    const rule = INPUT_RULES[key];
+    let n = numberOrZero(value);
+    if (!rule) return n;
+    n = clamp(n, rule.min, rule.max);
+    return rule.integer ? Math.round(n) : n;
+  }
+
+  function roundNestCount(value) {
+    return Math.max(0, Math.round(value));
+  }
+
   function syncInputs() {
     inputMap.forEach((item) => {
       const range = document.getElementById(item.range);
@@ -85,9 +116,10 @@
       if (!range || !input) return;
 
       const setValue = (value) => {
-        range.value = value;
-        input.value = value;
-        state.params[item.key] = numberOrZero(value);
+        const sanitized = sanitizeParam(item.key, value);
+        range.value = String(sanitized);
+        input.value = String(sanitized);
+        state.params[item.key] = sanitized;
       };
 
       range.addEventListener("input", () => setValue(range.value));
@@ -100,10 +132,32 @@
       const range = document.getElementById(item.range);
       const input = document.getElementById(item.input);
       if (!range || !input) return;
-      range.value = DEFAULTS[item.key];
-      input.value = DEFAULTS[item.key];
+      const sanitized = sanitizeParam(item.key, DEFAULTS[item.key]);
+      range.value = sanitized;
+      input.value = sanitized;
     });
-    state.params = { ...DEFAULTS };
+    state.params = Object.fromEntries(
+      Object.keys(DEFAULTS).map((key) => [key, sanitizeParam(key, DEFAULTS[key])])
+    );
+  }
+
+  function readParamsFromInputs() {
+    const nextParams = {};
+
+    inputMap.forEach((item) => {
+      const range = document.getElementById(item.range);
+      const input = document.getElementById(item.input);
+      if (!range || !input) return;
+
+      const rawValue = input.value !== "" ? input.value : range.value;
+      const sanitized = sanitizeParam(item.key, rawValue);
+
+      range.value = String(sanitized);
+      input.value = String(sanitized);
+      nextParams[item.key] = sanitized;
+    });
+
+    state.params = { ...state.params, ...nextParams };
   }
 
   function validateParams(p) {
@@ -111,9 +165,13 @@
     const warnings = [];
 
     if (p.A <= 0) messages.push("Oppervlakte (A) moet groter zijn dan 0.");
+    if (p.A > 150) messages.push("Oppervlakte (A) mag maximaal 150 zijn.");
     if (p.N0 < 1) messages.push("Startpopulatie (N0) moet minimaal 1 zijn.");
+    if (p.N0 > 150) messages.push("Startpopulatie (N0) mag maximaal 150 zijn.");
     if (p.R_max <= 1) warnings.push("R_max is ≤ 1: populatie groeit dan niet of krimpt.");
     if (p.d_max <= 0) messages.push("d_max moet groter zijn dan 0.");
+    if (p.p_passief < 0 || p.p_passief > 1) messages.push("Passief ruimingspercentage moet tussen 0 en 1 liggen.");
+    if (p.p_beheer < 0 || p.p_beheer > 1) messages.push("Actief beheerpercentage moet tussen 0 en 1 liggen.");
 
     const K = p.d_max * p.A;
     if (K <= 0) messages.push("Draagkracht K is <= 0. Controleer d_max en A.");
@@ -129,14 +187,27 @@
     return 1 - 1 / p.R_max;
   }
 
-  function findSaturationYear(params, scenarioKey) {
-    const K = calcCarryCapacity(params);
-    const threshold = params.s * K;
+  function combineRemovalRates(passiveRate, activeRate) {
+    return 1 - (1 - passiveRate) * (1 - activeRate);
+  }
 
-    let N = params.N0;
+  function calcSaturationThreshold(params) {
+    const correctedCarryCapacity = calcCarryCapacity(params) * (1 - params.p_passief);
+    return roundNestCount(params.s * correctedCarryCapacity);
+  }
+
+  function findSaturationYear(params) {
+    const K = calcCarryCapacity(params);
+    const threshold = calcSaturationThreshold(params);
+
+    let N = roundNestCount(params.N0);
     for (let t = 1; t <= params.T; t += 1) {
       if (N >= threshold) return t;
-      const N_next = (params.R_max * N) / (1 + ((params.R_max - 1) / K) * N);
+
+      const p_t = params.p_passief;
+      const V = Math.min(N, roundNestCount(p_t * N));
+      const N_rest = N - V;
+      const N_next = roundNestCount((params.R_max * N_rest) / (1 + ((params.R_max - 1) / K) * N_rest));
       N = N_next;
     }
     return null;
@@ -145,9 +216,9 @@
   function simulateScenario(params, scenarioType, saturationYear) {
     const K = calcCarryCapacity(params);
     const rows = [];
-    const threshold = params.s * K;
+    const threshold = calcSaturationThreshold(params);
 
-    let N = params.N0;
+    let N = roundNestCount(params.N0);
     let cumulativeCost = 0;
     let totalRemoved = 0;
     let peakCost = 0;
@@ -158,20 +229,20 @@
         saturationYearObserved = t;
       }
 
-      let p_t = 0;
+      let p_actief_t = 0;
 
       if (scenarioType === "scenario1") {
-        p_t = t >= params.t_start ? params.p_beheer : 0;
+        p_actief_t = t >= params.t_start ? params.p_beheer : 0;
       } else if (scenarioType === "scenario2") {
-        p_t = 0;
+        p_actief_t = 0;
       } else if (scenarioType === "scenario3") {
-        if (saturationYear && t >= saturationYear) p_t = params.p_beheer;
-        else p_t = 0;
+        p_actief_t = saturationYear && t >= saturationYear ? params.p_beheer : 0;
       }
 
-      const V = p_t * N;
-      const N_rest = (1 - p_t) * N;
-      const N_next = (params.R_max * N_rest) / (1 + ((params.R_max - 1) / K) * N_rest);
+      const p_t = combineRemovalRates(params.p_passief, p_actief_t);
+      const V = Math.min(N, roundNestCount(p_t * N));
+      const N_rest = N - V;
+      const N_next = roundNestCount((params.R_max * N_rest) / (1 + ((params.R_max - 1) / K) * N_rest));
       const cost = params.c * V;
 
       cumulativeCost += cost;
@@ -183,6 +254,8 @@
         scenario: scenarioType,
         N_t: N,
         p_t,
+        p_passief_t: params.p_passief,
+        p_actief_t,
         V_t: V,
         N_rest,
         N_next,
@@ -215,6 +288,7 @@
 
     return {
       carryCapacity: calcCarryCapacity(params),
+      saturationThreshold: calcSaturationThreshold(params),
       pkritisch: calcPKritisch(params),
       saturationYearScenario2,
       saturationYearScenario3,
@@ -234,9 +308,13 @@
   }
 
   function renderSummary(summary, params) {
+    const pEffectiefActief = combineRemovalRates(params.p_passief, params.p_beheer);
     const cards = [
       { label: "Draagkracht K", value: nf0.format(summary.carryCapacity) + " nesten" },
+      { label: "Verzadigingsdrempel (met p_passief-correctie)", value: nf0.format(summary.saturationThreshold) + " nesten" },
       { label: "Kritisch beheerpercentage p_kritisch", value: nf2.format(summary.pkritisch) },
+      { label: "Passieve ruiming p_passief", value: nf2.format(params.p_passief) },
+      { label: "Totaal bij actief beheer (passief + actief)", value: nf2.format(pEffectiefActief) },
       { label: "Verzadigingsjaar scenario 2", value: summary.saturationYearScenario2 ? "Jaar " + summary.saturationYearScenario2 : "Niet bereikt" },
       { label: "Verzadigingsjaar scenario 3", value: summary.saturationYearScenario3 ? "Jaar " + summary.saturationYearScenario3 : "Niet bereikt" },
       { label: "Totale kosten scenario 1", value: nfCurrency.format(summary.totalCosts.scenario1) },
@@ -261,11 +339,11 @@
       .join("");
 
     const warnings = [];
-    if (params.p_beheer <= summary.pkritisch) {
-      warnings.push("Het gekozen beheerpercentage ligt niet boven het theoretische omslagpunt bij lage dichtheid.");
+    if (pEffectiefActief <= summary.pkritisch) {
+      warnings.push("Het gecombineerde verwijderingspercentage (passief + actief) ligt niet boven het theoretische omslagpunt bij lage dichtheid.");
     }
     if (!summary.saturationYearScenario3) {
-      warnings.push("Scenario 3 bereikt geen verzadiging binnen de simulatieduur; p_t blijft 0 voor alle jaren.");
+      warnings.push("Scenario 3 bereikt geen verzadiging binnen de simulatieduur; alleen passieve ruiming wordt toegepast.");
     }
     elements.messages.textContent = warnings.join(" ");
   }
@@ -287,9 +365,9 @@
     const populationData = {
       labels,
       datasets: [
-        chartDataset(results.scenario1.label, results.scenario1.rows.map((r) => r.N_t), "#0f5d3d"),
-        chartDataset(results.scenario2.label, results.scenario2.rows.map((r) => r.N_t), "#6b4f1d"),
-        chartDataset(results.scenario3.label, results.scenario3.rows.map((r) => r.N_t), "#1b4965"),
+        chartDataset(results.scenario1.label, results.scenario1.rows.map((r) => r.N_next), "#0f5d3d"),
+        chartDataset(results.scenario2.label, results.scenario2.rows.map((r) => r.N_next), "#6b4f1d"),
+        chartDataset(results.scenario3.label, results.scenario3.rows.map((r) => r.N_next), "#1b4965"),
       ],
     };
 
@@ -325,7 +403,7 @@
 
     state.charts.population = new Chart(
       document.getElementById("chartPopulation"),
-      { type: "line", data: populationData, options: options("Beginpopulatie (nesten)", (v) => nf0.format(v)) }
+      { type: "line", data: populationData, options: options("Populatie na reductie + BH-groei (N_(t+1))", (v) => nf0.format(v)) }
     );
 
     state.charts.costs = new Chart(
@@ -373,11 +451,11 @@
         <tr>
           <td class="left">${r.year}</td>
           <td class="left">${SCENARIOS[r.scenario]}</td>
-          <td>${nf2.format(r.N_t)}</td>
+          <td>${nf0.format(r.N_t)}</td>
           <td>${nf2.format(r.p_t)}</td>
-          <td>${nf2.format(r.V_t)}</td>
-          <td>${nf2.format(r.N_rest)}</td>
-          <td>${nf2.format(r.N_next)}</td>
+          <td>${nf0.format(r.V_t)}</td>
+          <td>${nf0.format(r.N_rest)}</td>
+          <td>${nf0.format(r.N_next)}</td>
           <td>${nfCurrency.format(r.cost)}</td>
           <td>${nfCurrency.format(r.cumulativeCost)}</td>
         </tr>
@@ -422,10 +500,12 @@
     lines.push(["N0", params.N0].join(";"));
     lines.push(["R_max", params.R_max].join(";"));
     lines.push(["s", params.s].join(";"));
+    lines.push(["p_passief", params.p_passief].join(";"));
     lines.push(["p_beheer", params.p_beheer].join(";"));
     lines.push(["t_start", params.t_start].join(";"));
     lines.push(["T", params.T].join(";"));
     lines.push(["K", summary.carryCapacity].join(";"));
+    lines.push(["verzadigingsdrempel_gecorrigeerd", summary.saturationThreshold].join(";"));
     lines.push(["p_kritisch", summary.pkritisch].join(";"));
     lines.push("");
 
@@ -435,8 +515,8 @@
       lines.push([
         r.label,
         r.totalCost.toFixed(2),
-        r.totalRemoved.toFixed(2),
-        r.endPopulation.toFixed(2),
+        r.totalRemoved.toFixed(0),
+        r.endPopulation.toFixed(0),
         r.saturationYear ? r.saturationYear : "Niet bereikt",
         r.peakCost.toFixed(2),
       ].join(";"));
@@ -450,11 +530,11 @@
         lines.push([
           row.year,
           r.label,
-          row.N_t.toFixed(4),
+          row.N_t.toFixed(0),
           row.p_t.toFixed(4),
-          row.V_t.toFixed(4),
-          row.N_rest.toFixed(4),
-          row.N_next.toFixed(4),
+          row.V_t.toFixed(0),
+          row.N_rest.toFixed(0),
+          row.N_next.toFixed(0),
           row.cost.toFixed(2),
           row.cumulativeCost.toFixed(2),
         ].join(";"));
@@ -505,10 +585,12 @@
     addLine("N0 (startpopulatie)", nf0.format(params.N0));
     addLine("R_max", nf2.format(params.R_max));
     addLine("s (verzadiging)", nf2.format(params.s));
-    addLine("p_beheer", nf2.format(params.p_beheer));
+    addLine("p_passief", nf2.format(params.p_passief));
+    addLine("p_beheer (actief)", nf2.format(params.p_beheer));
     addLine("t_start", nf0.format(params.t_start));
     addLine("T", nf0.format(params.T));
     addLine("K (draagkracht)", nf0.format(summary.carryCapacity));
+    addLine("Verzadigingsdrempel (gecorrigeerd)", nf0.format(summary.saturationThreshold));
     addLine("p_kritisch", nf2.format(summary.pkritisch));
     y += 8;
 
@@ -574,7 +656,7 @@
   }
 
   function buildResults(params) {
-    const saturationYearScenario2 = findSaturationYear(params, "scenario2");
+    const saturationYearScenario2 = findSaturationYear(params);
     const saturationYearScenario3 = saturationYearScenario2;
 
     const results = {
@@ -589,6 +671,7 @@
   }
 
   function renderAll() {
+    readParamsFromInputs();
     const params = { ...state.params };
     const validation = validateParams(params);
 
@@ -652,5 +735,6 @@
   syncInputs();
   setupTabs();
   bindActions();
+  setDefaults();
   renderAll();
 })();

@@ -13,11 +13,11 @@
       <div>
         <h1>Populatie- en kostenmodel Aziatische hoornaar</h1>
         <p class="subtitle">
-          Simuleer 25 jaar populatiedynamiek en beheerkosten voor drie scenario’s. Alle berekeningen gebeuren lokaal in je browser.
+          Simuleer populatiedynamiek en beheerkosten voor drie scenario’s. Alle berekeningen gebeuren lokaal in je browser.
         </p>
       </div>
       <div class="topbar-actions">
-        <a class="btn secondary" href="../">Terug naar kaart</a>
+        <a class="btn secondary" href="../">SpringTrapping kaart</a>
       </div>
     </header>
 
@@ -46,8 +46,8 @@
           <div class="field">
             <label for="dmaxRange">Maximale populatiedichtheid (d_max)</label>
             <div class="field-row">
-              <input id="dmaxRange" type="range" min="2" max="25" step="1" value="10" />
-              <input id="dmaxInput" type="number" min="2" max="25" step="1" value="10" />
+              <input id="dmaxRange" type="range" min="2" max="25" step="1" value="12" />
+              <input id="dmaxInput" type="number" min="2" max="25" step="1" value="12" />
               <span class="unit">nesten/km²</span>
             </div>
           </div>
@@ -55,8 +55,8 @@
           <div class="field">
             <label for="aRange">Oppervlakte gebied (A)</label>
             <div class="field-row">
-              <input id="aRange" type="range" min="1" max="10000" step="1" value="100" />
-              <input id="aInput" type="number" min="1" max="10000" step="1" value="100" />
+              <input id="aRange" type="range" min="1" max="150" step="1" value="30" />
+              <input id="aInput" type="number" min="1" max="150" step="1" value="30" />
               <span class="unit">km²</span>
             </div>
           </div>
@@ -64,8 +64,8 @@
           <div class="field">
             <label for="n0Range">Startpopulatie (N0)</label>
             <div class="field-row">
-              <input id="n0Range" type="range" min="1" max="1000" step="1" value="1" />
-              <input id="n0Input" type="number" min="1" max="1000" step="1" value="1" />
+              <input id="n0Range" type="range" min="1" max="150" step="1" value="15" />
+              <input id="n0Input" type="number" min="1" max="150" step="1" value="15" />
               <span class="unit">nesten</span>
             </div>
           </div>
@@ -89,7 +89,16 @@
           </div>
 
           <div class="field">
-            <label for="pbeheerRange">Beheerpercentage (p_beheer)</label>
+            <label for="ppassiefRange">Passief ruimingspercentage (p_passief)</label>
+            <div class="field-row">
+              <input id="ppassiefRange" type="range" min="0" max="1" step="0.01" value="0.30" />
+              <input id="ppassiefInput" type="number" min="0" max="1" step="0.01" value="0.30" />
+              <span class="unit">fractie</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pbeheerRange">Actief beheerpercentage (p_beheer)</label>
             <div class="field-row">
               <input id="pbeheerRange" type="range" min="0" max="1" step="0.01" value="0.80" />
               <input id="pbeheerInput" type="number" min="0" max="1" step="0.01" value="0.80" />
@@ -109,8 +118,8 @@
           <div class="field">
             <label for="tRange">Simulatieduur (T)</label>
             <div class="field-row">
-              <input id="tRange" type="range" min="1" max="50" step="1" value="25" />
-              <input id="tInput" type="number" min="1" max="50" step="1" value="25" />
+              <input id="tRange" type="range" min="1" max="50" step="1" value="10" />
+              <input id="tInput" type="number" min="1" max="50" step="1" value="10" />
               <span class="unit">jaar</span>
             </div>
           </div>
@@ -134,12 +143,12 @@
         <h2>Grafieken</h2>
         <div class="charts">
           <div class="chart-card">
-            <h3>Populatie aan begin van elk jaar</h3>
-            <canvas id="chartPopulation" height="260"></canvas>
+            <h3>Populatie na reductie en Beverton-Holt groei</h3>
+            <canvas id="chartPopulation" height="180"></canvas>
           </div>
           <div class="chart-card">
             <h3>Cumulatieve kosten per jaar</h3>
-            <canvas id="chartCosts" height="260"></canvas>
+            <canvas id="chartCosts" height="180"></canvas>
           </div>
         </div>
       </section>
