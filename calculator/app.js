@@ -57,7 +57,7 @@
   ];
 
   const INPUT_RULES = {
-    c: { min: 200, max: 500, integer: true },
+    c: { min: 200, max: 1000, integer: true },
     d_max: { min: 2, max: 25, integer: true },
     A: { min: 1, max: 150, integer: true },
     N0: { min: 1, max: 150, integer: true },
@@ -66,7 +66,7 @@
     p_passief: { min: 0, max: 1, integer: false },
     p_beheer: { min: 0, max: 1, integer: false },
     t_start: { min: 1, max: 25, integer: true },
-    T: { min: 1, max: 50, integer: true },
+    T: { min: 1, max: 25, integer: true },
   };
 
   const state = {
