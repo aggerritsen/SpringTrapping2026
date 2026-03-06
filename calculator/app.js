@@ -20,7 +20,7 @@
     s: 0.95,
     p_passief: 0.3,
     p_beheer: 0.8,
-    t_start: 3,
+    t_start: 1,
     T: 10,
   };
 
@@ -796,8 +796,6 @@
     doc.setTextColor(70, 70, 70);
     doc.text(`Exportdatum en tijd: ${new Date().toLocaleString("nl-NL")}`, layout.left, y);
     y += 12;
-    doc.text(`Simulatieduur: ${nf0.format(params.T)} jaren`, layout.left, y);
-    y += 12;
     doc.text(`Modelversie: ${modelVersion}`, layout.left, y);
     y += 12;
     doc.text("Notitie: Automatisch gegenereerde scenarioanalyse", layout.left, y);
@@ -812,6 +810,7 @@
     );
 
     y = pdfAddSectionTitle(doc, "Managementsamenvatting", y, layout);
+    y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
     y = pdfRenderTable(
       doc,
       {
