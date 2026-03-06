@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Populatie- en kostenmodel Aziatische hoornaar</title>
+  <link rel="icon" type="image/png" href="../icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div>
+        <h1>Populatie- en kostenmodel Aziatische hoornaar</h1>
+        <p class="subtitle">
+          Simuleer 25 jaar populatiedynamiek en beheerkosten voor drie scenario’s. Alle berekeningen gebeuren lokaal in je browser.
+        </p>
+      </div>
+      <div class="topbar-actions">
+        <a class="btn secondary" href="../">Terug naar kaart</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Invoerparameters</h2>
+          <div class="panel-actions">
+            <button id="btnReset" class="btn secondary" type="button">Herstel standaardwaarden</button>
+            <button id="btnCalc" class="btn primary" type="button">Bereken</button>
+          </div>
+        </div>
+
+        <div id="validation" class="validation" role="status" aria-live="polite"></div>
+
+        <div class="inputs">
+          <div class="field">
+            <label for="cRange">Kostprijs per nestverwijdering (c)</label>
+            <div class="field-row">
+              <input id="cRange" type="range" min="200" max="500" step="10" value="350" />
+              <input id="cInput" type="number" min="200" max="500" step="10" value="350" />
+              <span class="unit">€/nest</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="dmaxRange">Maximale populatiedichtheid (d_max)</label>
+            <div class="field-row">
+              <input id="dmaxRange" type="range" min="2" max="25" step="1" value="10" />
+              <input id="dmaxInput" type="number" min="2" max="25" step="1" value="10" />
+              <span class="unit">nesten/km²</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="aRange">Oppervlakte gebied (A)</label>
+            <div class="field-row">
+              <input id="aRange" type="range" min="1" max="10000" step="1" value="100" />
+              <input id="aInput" type="number" min="1" max="10000" step="1" value="100" />
+              <span class="unit">km²</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="n0Range">Startpopulatie (N0)</label>
+            <div class="field-row">
+              <input id="n0Range" type="range" min="1" max="1000" step="1" value="1" />
+              <input id="n0Input" type="number" min="1" max="1000" step="1" value="1" />
+              <span class="unit">nesten</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="rmaxRange">Maximale groeifactor bij lage dichtheid (R_max)</label>
+            <div class="field-row">
+              <input id="rmaxRange" type="range" min="1.1" max="10" step="0.1" value="4.5" />
+              <input id="rmaxInput" type="number" min="1.1" max="10" step="0.1" value="4.5" />
+              <span class="unit">x/jaar</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="sRange">Verzadigingsdefinitie (s) als fractie van draagkracht</label>
+            <div class="field-row">
+              <input id="sRange" type="range" min="0.5" max="0.99" step="0.01" value="0.95" />
+              <input id="sInput" type="number" min="0.5" max="0.99" step="0.01" value="0.95" />
+              <span class="unit">fractie</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pbeheerRange">Beheerpercentage (p_beheer)</label>
+            <div class="field-row">
+              <input id="pbeheerRange" type="range" min="0" max="1" step="0.01" value="0.80" />
+              <input id="pbeheerInput" type="number" min="0" max="1" step="0.01" value="0.80" />
+              <span class="unit">fractie</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="tstartRange">Startjaar vroeg beheer (t_start) — scenario 1</label>
+            <div class="field-row">
+              <input id="tstartRange" type="range" min="1" max="25" step="1" value="3" />
+              <input id="tstartInput" type="number" min="1" max="25" step="1" value="3" />
+              <span class="unit">jaar</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="tRange">Simulatieduur (T)</label>
+            <div class="field-row">
+              <input id="tRange" type="range" min="1" max="50" step="1" value="25" />
+              <input id="tInput" type="number" min="1" max="50" step="1" value="25" />
+              <span class="unit">jaar</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Samenvatting</h2>
+          <div class="panel-actions">
+            <button id="btnCsv" class="btn secondary" type="button">Exporteer CSV</button>
+            <button id="btnPdf" class="btn secondary" type="button">Exporteer PDF</button>
+          </div>
+        </div>
+
+        <div id="summary" class="summary-grid"></div>
+        <div id="messages" class="info"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Grafieken</h2>
+        <div class="charts">
+          <div class="chart-card">
+            <h3>Populatie aan begin van elk jaar</h3>
+            <canvas id="chartPopulation" height="260"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Cumulatieve kosten per jaar</h3>
+            <canvas id="chartCosts" height="260"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Scenario-overzicht</h2>
+        <div id="scenarioTable" class="table-wrap"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Detailtabel per jaar</h2>
+          <div class="panel-actions">
+            <div class="tabs" role="tablist">
+              <button class="tab active" data-scenario="scenario1" type="button" role="tab">Scenario 1</button>
+              <button class="tab" data-scenario="scenario2" type="button" role="tab">Scenario 2</button>
+              <button class="tab" data-scenario="scenario3" type="button" role="tab">Scenario 3</button>
+            </div>
+          </div>
+        </div>
+        <div id="detailTable" class="table-wrap"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Spring Trapping 2026</span>
+      <span class="muted">Client-side model — geen backend</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,8 +1,15 @@
 # Spring Trapping 2026
 
-## Routes
+Interactieve kaart voor Spring Trapping 2026 datasets.
 
-- Marker/ring map: `/?region=focus`
-- Heatmap: `/heatmap/?dataset=focus`
+## Calculator
+In `./calculator/` staat een volledig client-side populatie- en kostenmodel voor de Aziatische hoornaar.
+Het simuleert populatieontwikkeling en beheerkosten voor drie scenario’s (vroeg starten, niets doen, pas ingrijpen na verzadiging).
 
-Supported dataset keys: `focus`, `hotspot`, `noord`, `midden`, `zh`, `zl`, `nb`, `li`.
+### Export
+- CSV-export: metadata, invoerparameters, scenario-samenvatting en volledige jaarresultaten.
+- PDF-export: rapport met invoerparameters, kerncijfers, scenariovergelijking en grafieken.
+
+### Externe CDN-libraries
+- Chart.js (grafieken)
+- jsPDF (PDF-export)
