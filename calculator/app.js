@@ -554,104 +554,486 @@
     URL.revokeObjectURL(link.href);
   }
 
+  function pdfCreateLayout(doc) {
+    return {
+      left: 40,
+      right: 40,
+      top: 44,
+      bottom: 34,
+      pageWidth: doc.internal.pageSize.getWidth(),
+      pageHeight: doc.internal.pageSize.getHeight(),
+    };
+  }
+
+  function pdfEnsureSpace(doc, y, neededHeight, layout) {
+    if (y + neededHeight > layout.pageHeight - layout.bottom) {
+      doc.addPage();
+      return layout.top;
+    }
+    return y;
+  }
+
+  function pdfAddSectionTitle(doc, text, y, layout) {
+    y = pdfEnsureSpace(doc, y, 24, layout);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(20, 20, 20);
+    doc.text(text, layout.left, y);
+    return y + 16;
+  }
+
+  function pdfAddSubTitle(doc, text, y, layout) {
+    y = pdfEnsureSpace(doc, y, 18, layout);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(25, 25, 25);
+    doc.text(text, layout.left, y);
+    return y + 14;
+  }
+
+  function pdfAddParagraph(doc, text, y, layout, options = {}) {
+    const fontSize = options.fontSize || 10;
+    const lineHeight = options.lineHeight || 13;
+    const spacingAfter = options.spacingAfter == null ? 6 : options.spacingAfter;
+    const maxWidth = options.maxWidth || (layout.pageWidth - layout.left - layout.right);
+    const color = options.color || [40, 40, 40];
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(fontSize);
+    doc.setTextColor(color[0], color[1], color[2]);
+    const lines = doc.splitTextToSize(text, maxWidth);
+    y = pdfEnsureSpace(doc, y, lines.length * lineHeight + spacingAfter + 2, layout);
+    doc.text(lines, layout.left, y);
+    return y + lines.length * lineHeight + spacingAfter;
+  }
+
+  function pdfFormatSaturationYear(value) {
+    return value ? `Jaar ${value}` : "Niet bereikt";
+  }
+
+  function pdfBuildInsights(results) {
+    const scenarioLabels = {
+      scenario1: "Scenario 1 - vroeg beheer",
+      scenario2: "Scenario 2 - geen beheer",
+      scenario3: "Scenario 3 - beheer na verzadiging",
+    };
+    const s1 = results.scenario1;
+    const s2 = results.scenario2;
+    const s3 = results.scenario3;
+
+    const scenarios = [
+      { key: "scenario1", totalCost: s1.totalCost, endPopulation: s1.endPopulation },
+      { key: "scenario2", totalCost: s2.totalCost, endPopulation: s2.endPopulation },
+      { key: "scenario3", totalCost: s3.totalCost, endPopulation: s3.endPopulation },
+    ];
+
+    const cheapest = scenarios.reduce((min, cur) => (cur.totalCost < min.totalCost ? cur : min), scenarios[0]);
+    const lowestEndPop = scenarios.reduce((min, cur) => (cur.endPopulation < min.endPopulation ? cur : min), scenarios[0]);
+
+    const lines = [];
+    if (s1.totalCost < s3.totalCost) {
+      lines.push("Bij de gekozen parameters leidt vroeg beheer tot lagere cumulatieve kosten dan beheer na verzadiging.");
+    } else if (s1.totalCost > s3.totalCost) {
+      lines.push("Bij de gekozen parameters leidt beheer na verzadiging tot lagere cumulatieve kosten dan vroeg beheer.");
+    } else {
+      lines.push("Bij de gekozen parameters zijn de cumulatieve kosten van vroeg beheer en beheer na verzadiging vergelijkbaar.");
+    }
+
+    if (s3.endPopulation > s1.endPopulation) {
+      lines.push("Uitstel van ingrijpen vergroot de populatiebasis waarop later moet worden beheerd.");
+    } else {
+      lines.push("De populatiebasis bij beheer na verzadiging blijft in deze run vergelijkbaar met of lager dan die bij vroeg beheer.");
+    }
+
+    lines.push("Het referentiescenario zonder actief beheer laat zien tot welk populatieniveau de populatie onder deze aannames kan doorgroeien.");
+    lines.push(`${scenarioLabels[cheapest.key]} heeft in deze run de laagste totale kosten, terwijl ${scenarioLabels[lowestEndPop.key]} de laagste eindpopulatie oplevert.`);
+
+    return lines.slice(0, 4);
+  }
+
+  function pdfRenderTableFallback(doc, cfg, layout) {
+    const { head, body, startY } = cfg;
+    const cellPadding = 3;
+    const lineHeight = 10;
+    const minRowHeight = 16;
+    const colCount = head.length;
+    const tableWidth = layout.pageWidth - layout.left - layout.right;
+    const widths = Array.isArray(cfg.columnPercents) && cfg.columnPercents.length === colCount
+      ? cfg.columnPercents.map((p) => p * tableWidth)
+      : Array.from({ length: colCount }, () => tableWidth / colCount);
+
+    let y = startY;
+
+    const drawRow = (cells, isHeader) => {
+      const wrapped = cells.map((cell, idx) => {
+        const value = String(cell == null ? "" : cell);
+        return doc.splitTextToSize(value, widths[idx] - cellPadding * 2);
+      });
+      const lineCount = Math.max(...wrapped.map((l) => l.length));
+      const rowHeight = Math.max(minRowHeight, lineCount * lineHeight + 2);
+
+      y = pdfEnsureSpace(doc, y, rowHeight + 2, layout);
+
+      let x = layout.left;
+      for (let i = 0; i < colCount; i += 1) {
+        if (isHeader) {
+          doc.setFillColor(240, 240, 240);
+          doc.rect(x, y, widths[i], rowHeight, "FD");
+        } else {
+          doc.rect(x, y, widths[i], rowHeight, "S");
+        }
+        doc.setFont("helvetica", isHeader ? "bold" : "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(30, 30, 30);
+        doc.text(wrapped[i], x + cellPadding, y + 10);
+        x += widths[i];
+      }
+
+      y += rowHeight;
+    };
+
+    drawRow(head, true);
+    body.forEach((row) => drawRow(row, false));
+
+    return y + 8;
+  }
+
+  function pdfRenderTable(doc, cfg, layout) {
+    if (typeof doc.autoTable === "function") {
+      doc.autoTable({
+        startY: cfg.startY,
+        head: [cfg.head],
+        body: cfg.body,
+        theme: "grid",
+        margin: { left: layout.left, right: layout.right },
+        styles: {
+          font: "helvetica",
+          fontSize: 8.5,
+          cellPadding: 3,
+          lineColor: [190, 190, 190],
+          lineWidth: 0.3,
+          textColor: [28, 28, 28],
+          overflow: "linebreak",
+        },
+        headStyles: {
+          fillColor: [240, 240, 240],
+          textColor: [20, 20, 20],
+          fontStyle: "bold",
+        },
+        columnStyles: cfg.columnStyles || {},
+      });
+      return (doc.lastAutoTable ? doc.lastAutoTable.finalY : cfg.startY) + 10;
+    }
+    return pdfRenderTableFallback(doc, cfg, layout);
+  }
+
+  function pdfAddPageNumbers(doc, layout) {
+    const totalPages = doc.getNumberOfPages();
+    for (let page = 1; page <= totalPages; page += 1) {
+      doc.setPage(page);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Pagina ${page} van ${totalPages}`, layout.pageWidth - layout.right, layout.pageHeight - 16, { align: "right" });
+    }
+  }
+
   async function exportPDF(results, params, summary) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const margin = 40;
-    let y = margin;
+    const layout = pdfCreateLayout(doc);
+    const modelVersion = "1.0";
+    let y = layout.top;
 
-    const addTitle = (text) => {
-      doc.setFontSize(16);
-      doc.text(text, margin, y);
-      y += 22;
-    };
+    const scenarioRows = [
+      ["Scenario 1 - vroeg beheer", nfCurrency.format(results.scenario1.totalCost), nf0.format(results.scenario1.totalRemoved), nf0.format(results.scenario1.endPopulation), pdfFormatSaturationYear(results.scenario1.saturationYear), nfCurrency.format(results.scenario1.peakCost)],
+      ["Scenario 2 - geen beheer", nfCurrency.format(results.scenario2.totalCost), nf0.format(results.scenario2.totalRemoved), nf0.format(results.scenario2.endPopulation), pdfFormatSaturationYear(results.scenario2.saturationYear), nfCurrency.format(results.scenario2.peakCost)],
+      ["Scenario 3 - beheer na verzadiging", nfCurrency.format(results.scenario3.totalCost), nf0.format(results.scenario3.totalRemoved), nf0.format(results.scenario3.endPopulation), pdfFormatSaturationYear(results.scenario3.saturationYear), nfCurrency.format(results.scenario3.peakCost)],
+    ];
 
-    const addLine = (label, value) => {
-      doc.setFontSize(10);
-      doc.text(`${label}: ${value}`, margin, y);
-      y += 14;
-    };
+    const insights = pdfBuildInsights(results);
 
-    addTitle("Populatie- en kostenmodel Aziatische hoornaar");
-    addLine("Exportdatum", new Date().toLocaleString("nl-NL"));
-    y += 6;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(12, 12, 12);
+    doc.text("Populatie- en kostenmodel Aziatische hoornaar (Vespa velutina)", layout.left, y);
+    y += 24;
 
-    doc.setFontSize(12);
-    doc.text("Invoerparameters", margin, y);
-    y += 16;
-    addLine("c (kostprijs per nest)", nfCurrency.format(params.c));
-    addLine("d_max (max. dichtheid)", nf2.format(params.d_max));
-    addLine("A (km²)", nf0.format(params.A));
-    addLine("N0 (startpopulatie)", nf0.format(params.N0));
-    addLine("R_max", nf2.format(params.R_max));
-    addLine("s (verzadiging)", nf2.format(params.s));
-    addLine("p_passief", nf2.format(params.p_passief));
-    addLine("p_beheer (actief)", nf2.format(params.p_beheer));
-    addLine("t_start", nf0.format(params.t_start));
-    addLine("T", nf0.format(params.T));
-    addLine("K (draagkracht)", nf0.format(summary.carryCapacity));
-    addLine("Verzadigingsdrempel (gecorrigeerd)", nf0.format(summary.saturationThreshold));
-    addLine("p_kritisch", nf2.format(summary.pkritisch));
-    y += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(40, 40, 40);
+    doc.text("Scenarioanalyse van populatieontwikkeling, nestverwijdering en kosten", layout.left, y);
+    y += 18;
 
-    doc.setFontSize(12);
-    doc.text("Samenvatting per scenario", margin, y);
+    doc.setFontSize(9);
+    doc.setTextColor(70, 70, 70);
+    doc.text(`Exportdatum en tijd: ${new Date().toLocaleString("nl-NL")}`, layout.left, y);
+    y += 12;
+    doc.text(`Simulatieduur: ${nf0.format(params.T)} jaren`, layout.left, y);
+    y += 12;
+    doc.text(`Modelversie: ${modelVersion}`, layout.left, y);
+    y += 12;
+    doc.text("Notitie: Automatisch gegenereerde scenarioanalyse", layout.left, y);
     y += 16;
 
-    Object.values(results).forEach((r) => {
-      addLine(
-        r.label,
-        `Kosten ${nfCurrency.format(r.totalCost)} | Verwijderd ${nf0.format(r.totalRemoved)} | Eindpop ${nf1.format(r.endPopulation)}`
+    y = pdfAddParagraph(
+      doc,
+      "Dit rapport geeft een modelmatige vergelijking van drie beheerscenario's voor de Aziatische hoornaar. De uitkomsten zijn bedoeld voor scenarioanalyse en beleidsinterpretatie en niet als exacte voorspelling van toekomstige populatiegroottes.",
+      y,
+      layout,
+      { fontSize: 10, lineHeight: 13, spacingAfter: 10 }
+    );
+
+    y = pdfAddSectionTitle(doc, "Managementsamenvatting", y, layout);
+    y = pdfRenderTable(
+      doc,
+      {
+        startY: y,
+        head: ["Scenario", "Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
+        body: scenarioRows,
+        columnStyles: {
+          0: { cellWidth: 130 },
+          1: { cellWidth: 72 },
+          2: { cellWidth: 92 },
+          3: { cellWidth: 62 },
+          4: { cellWidth: 76 },
+          5: { cellWidth: 72 },
+        },
+        columnPercents: [0.28, 0.14, 0.18, 0.12, 0.14, 0.14],
+      },
+      layout
+    );
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(30, 30, 30);
+    y = pdfEnsureSpace(doc, y, 16, layout);
+    doc.text("Interpretatie:", layout.left, y);
+    y += 12;
+    insights.forEach((line) => {
+      y = pdfAddParagraph(doc, `- ${line}`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 2 });
+    });
+    y += 4;
+
+    y = pdfAddSectionTitle(doc, "Gebruikte modelparameters", y, layout);
+    y = pdfRenderTable(
+      doc,
+      {
+        startY: y,
+        head: ["Parameter", "Symbool", "Waarde", "Eenheid", "Betekenis"],
+        body: [
+          ["Kostprijs per nestverwijdering", "c", nf0.format(params.c), "euro per nest", "Directe verwijderingskosten per nest."],
+          ["Maximale nestdichtheid", "d_max", nf0.format(params.d_max), "nesten per km2", "Maximumdichtheid per oppervlakte-eenheid."],
+          ["Oppervlakte gebied", "A", nf0.format(params.A), "km2", "Grootte van het gemodelleerde gebied."],
+          ["Startpopulatie", "N0", nf0.format(params.N0), "nesten", "Beginaantal nesten in jaar 1."],
+          ["Maximale groeifactor bij lage dichtheid", "R_max", nf2.format(params.R_max), "factor", "Groeidruk in vroege populatiefase."],
+          ["Verzadigingsdrempel", "s", nf2.format(params.s), "fractie van K", "Drempel voor analytisch verzadigingsmoment."],
+          ["Jaarlijks verwijderingspercentage actief", "p_beheer", nf2.format(params.p_beheer), "fractie", "Aandeel actief verwijderde nesten per jaar."],
+          ["Jaarlijks verwijderingspercentage passief", "p_passief", nf2.format(params.p_passief), "fractie", "Aandeel passief verwijderde nesten per jaar."],
+          ["Startjaar vroeg beheer", "t_start", nf0.format(params.t_start), "jaar", "Jaar waarin scenario 1 actief beheer start."],
+          ["Simulatieduur", "T", nf0.format(params.T), "jaren", "Aantal gesimuleerde jaren."],
+        ],
+        columnStyles: {
+          0: { cellWidth: 136 },
+          1: { cellWidth: 48 },
+          2: { cellWidth: 58 },
+          3: { cellWidth: 86 },
+          4: { cellWidth: 194 },
+        },
+        columnPercents: [0.26, 0.09, 0.11, 0.16, 0.38],
+      },
+      layout
+    );
+
+    y = pdfAddParagraph(doc, "Afgeleide grootheid: K = d_max x A [S1]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 4 });
+    y = pdfAddParagraph(
+      doc,
+      "De draagkracht K geeft de theoretische maximale populatieomvang binnen het gemodelleerde gebied onder de gekozen aanname voor maximale nestdichtheid.",
+      y,
+      layout,
+      { fontSize: 9.5, lineHeight: 12, spacingAfter: 8 }
+    );
+
+    y = pdfAddSectionTitle(doc, "Model voor populatiedynamiek", y, layout);
+    y = pdfAddParagraph(
+      doc,
+      "De populatieontwikkeling wordt gemodelleerd met een dichtheidsafhankelijk groeimodel van het Beverton-Holt-type [S2]. Dit betekent dat de populatie bij lage dichtheid snel kan toenemen, terwijl de groei afremt wanneer de populatie de draagkracht van het gebied benadert.",
+      y,
+      layout,
+      { fontSize: 9.5, lineHeight: 12, spacingAfter: 6 }
+    );
+    y = pdfAddParagraph(doc, "V_t = p_t x N_t", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "N_rest = (1 - p_t) x N_t", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "N_(t+1) = (R_max x N_rest) / (1 + ((R_max - 1) / K) x N_rest)", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "C_t = c x V_t [S4]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 6 });
+    y = pdfAddParagraph(doc, "N_t = aantal nesten aan het begin van jaar t", y, layout, { fontSize: 9.2, lineHeight: 11, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "V_t = aantal verwijderde nesten in jaar t", y, layout, { fontSize: 9.2, lineHeight: 11, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "N_rest = resterende populatie na verwijdering", y, layout, { fontSize: 9.2, lineHeight: 11, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "N_(t+1) = populatie aan het begin van het volgende jaar", y, layout, { fontSize: 9.2, lineHeight: 11, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "C_t = jaarlijkse verwijderingskosten", y, layout, { fontSize: 9.2, lineHeight: 11, spacingAfter: 8 });
+
+    y = pdfAddSectionTitle(doc, "Interpretatie van modelparameters", y, layout);
+    y = pdfAddSubTitle(doc, "R_max", y, layout);
+    y = pdfAddParagraph(doc, "Bepaalt hoe snel de populatie groeit wanneer deze nog ver onder de draagkracht ligt. Hogere waarden leiden tot snellere uitbreiding in de vroege fase.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "d_max", y, layout);
+    y = pdfAddParagraph(doc, "Bepaalt samen met de oppervlakte de potentiele maximale nestbezetting van het gebied. Hogere waarden leiden tot een hogere theoretische draagkracht [S1].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "A", y, layout);
+    y = pdfAddParagraph(doc, "Grotere gebieden kunnen bij gelijke dichtheid meer nesten dragen. Daardoor nemen zowel potentiele populatieomvang als latere beheersinspanning toe [S1].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "p_beheer", y, layout);
+    y = pdfAddParagraph(doc, "Geeft aan welk deel van de aanwezige nesten jaarlijks voor reproductie effectief wordt verwijderd. Dit is de belangrijkste beleidsmatige stuurvariabele in actieve scenario's [S3].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "c", y, layout);
+    y = pdfAddParagraph(doc, "Beinvloedt niet de ecologische uitkomst van het model, maar wel de financiele gevolgen van beheer [S4].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "t_start", y, layout);
+    y = pdfAddParagraph(doc, "Bepaalt hoe vroeg actief beheer start. Een vroeger startmoment verkleint doorgaans de kans op latere hoge beheerkosten [S6].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddSubTitle(doc, "s", y, layout);
+    y = pdfAddParagraph(doc, "Geeft aan bij welk aandeel van de draagkracht in dit model wordt gesproken van verzadiging. Dit is een analytische drempel en geen absoluut ecologisch omslagpunt [S5].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 });
+
+    y = pdfAddSectionTitle(doc, "Kritisch beheerpercentage", y, layout);
+    y = pdfRenderTable(
+      doc,
+      {
+        startY: y,
+        head: ["Grootheid", "Waarde", "Toelichting"],
+        body: [
+          ["Kritisch beheerpercentage p_kritisch", nf2.format(summary.pkritisch), "Theoretische ondergrens bij lage dichtheid."],
+          ["Gekozen beheerpercentage p_beheer", nf2.format(params.p_beheer), "Invoer voor actieve scenario's."],
+          ["Conclusie", params.p_beheer >= summary.pkritisch ? "Boven p_kritisch" : "Onder p_kritisch", params.p_beheer >= summary.pkritisch ? "Structurele afremming in de vroege fase is volgens het model plausibel." : "Structurele krimp in de vroege fase is volgens het model minder waarschijnlijk."],
+        ],
+        columnStyles: {
+          0: { cellWidth: 180 },
+          1: { cellWidth: 80 },
+          2: { cellWidth: 214 },
+        },
+        columnPercents: [0.38, 0.16, 0.46],
+      },
+      layout
+    );
+    y = pdfAddParagraph(
+      doc,
+      "Het kritische beheerpercentage is het theoretische minimumpercentage verwijdering dat bij lage dichtheid nodig is om populatiegroei af te remmen. Ligt het gekozen beheerpercentage daaronder, dan is structurele krimp in de vroege fase volgens het model minder waarschijnlijk.",
+      y,
+      layout,
+      { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 }
+    );
+
+    y = pdfAddSectionTitle(doc, "Resultaten per scenario", y, layout);
+
+    const scenarioSections = [
+      {
+        title: "Scenario 1 - vroeg starten met beheer",
+        description: "Vanaf jaar t_start wordt jaarlijks een fractie p_beheer van de nesten verwijderd.",
+        result: results.scenario1,
+      },
+      {
+        title: "Scenario 2 - geen beheer",
+        description: "Er vindt geen actieve nestverwijdering plaats. Dit scenario fungeert als referentiescenario.",
+        result: results.scenario2,
+      },
+      {
+        title: "Scenario 3 - beheer na verzadiging",
+        description: "Er wordt pas actief verwijderd zodra de populatie de gekozen verzadigingsdrempel bereikt.",
+        result: results.scenario3,
+      },
+    ];
+
+    scenarioSections.forEach((section) => {
+      y = pdfAddSubTitle(doc, section.title, y, layout);
+      y = pdfAddParagraph(doc, `${section.description} [S6]`, y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 4 });
+      y = pdfRenderTable(
+        doc,
+        {
+          startY: y,
+          head: ["Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
+          body: [[
+            nfCurrency.format(section.result.totalCost),
+            nf0.format(section.result.totalRemoved),
+            nf0.format(section.result.endPopulation),
+            pdfFormatSaturationYear(section.result.saturationYear),
+            nfCurrency.format(section.result.peakCost),
+          ]],
+          columnStyles: {
+            0: { cellWidth: 108 },
+            1: { cellWidth: 118 },
+            2: { cellWidth: 82 },
+            3: { cellWidth: 92 },
+            4: { cellWidth: 92 },
+          },
+          columnPercents: [0.22, 0.24, 0.17, 0.19, 0.18],
+        },
+        layout
       );
+      y += 2;
     });
 
-    y += 6;
+    y = pdfAddSectionTitle(doc, "Grafieken", y, layout);
 
-    const chartPop = document.getElementById("chartPopulation");
-    const chartCost = document.getElementById("chartCosts");
+    const chartBlocks = [
+      { id: "chartPopulation", title: "Populatieontwikkeling per scenario" },
+      { id: "chartCosts", title: "Cumulatieve kosten per scenario" },
+    ];
 
-    if (chartPop && chartCost) {
-      const imgPop = chartPop.toDataURL("image/png", 1.0);
-      const imgCost = chartCost.toDataURL("image/png", 1.0);
-
-      const imgWidth = 500;
-      const imgHeight = 220;
-
-      if (y + imgHeight * 2 + 30 > doc.internal.pageSize.height) {
-        doc.addPage();
-        y = margin;
+    chartBlocks.forEach((chart) => {
+      y = pdfAddSubTitle(doc, chart.title, y, layout);
+      const canvas = document.getElementById(chart.id);
+      if (!canvas || typeof canvas.toDataURL !== "function") {
+        y = pdfAddParagraph(doc, "Grafiek niet beschikbaar in deze exportsessie.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
+        return;
       }
 
-      doc.setFontSize(12);
-      doc.text("Grafieken", margin, y);
-      y += 14;
-      doc.addImage(imgPop, "PNG", margin, y, imgWidth, imgHeight);
-      y += imgHeight + 12;
-      doc.addImage(imgCost, "PNG", margin, y, imgWidth, imgHeight);
-      y += imgHeight + 8;
-    }
+      let imgData = null;
+      try {
+        imgData = canvas.toDataURL("image/png", 1.0);
+      } catch (e) {
+        imgData = null;
+      }
 
-    // Kleine scenariovergelijkingstabel (samenvatting)
-    if (y + 90 > doc.internal.pageSize.height) {
-      doc.addPage();
-      y = margin;
-    }
+      if (!imgData) {
+        y = pdfAddParagraph(doc, "Grafiek kon niet worden opgenomen in de PDF.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
+        return;
+      }
 
-    doc.setFontSize(12);
-    doc.text("Scenariovergelijking", margin, y);
-    y += 14;
-
-    doc.setFontSize(10);
-    const header = "Scenario | Totale kosten | Verwijderde nesten | Verzadigingsjaar";
-    doc.text(header, margin, y);
-    y += 12;
-
-    Object.values(results).forEach((r) => {
-      const line = `${r.label} | ${nfCurrency.format(r.totalCost)} | ${nf0.format(r.totalRemoved)} | ${r.saturationYear ? r.saturationYear : "Niet"}`;
-      doc.text(line, margin, y);
-      y += 12;
+      const imgWidth = layout.pageWidth - layout.left - layout.right;
+      const ratio = canvas.width > 0 ? canvas.height / canvas.width : 0.42;
+      const imgHeight = Math.min(220, Math.max(140, imgWidth * ratio));
+      y = pdfEnsureSpace(doc, y, imgHeight + 8, layout);
+      doc.addImage(imgData, "PNG", layout.left, y, imgWidth, imgHeight, undefined, "FAST");
+      y += imgHeight + 10;
     });
 
+    y = pdfAddSectionTitle(doc, "Systematische verwijzingen", y, layout);
+    const systematicRefs = [
+      "[S1] Draagkracht: De berekende draagkracht K volgt rechtstreeks uit de aanname K = d_max x A.",
+      "[S2] Populatiegroei: De jaarlijkse populatieontwikkeling volgt uit een dichtheidsafhankelijk Beverton-Holt-model met parameter R_max.",
+      "[S3] Beheer: De omvang van nestverwijdering in actieve scenario's wordt bepaald door p_t en dus uiteindelijk door p_beheer en het gekozen scenario-regime.",
+      "[S4] Kosten: De jaarlijkse kosten volgen lineair uit het aantal verwijderde nesten via C_t = c x V_t.",
+      "[S5] Verzadiging: Het verzadigingsjaar is afhankelijk van de gekozen drempel s x K en is dus modelmatig gedefinieerd.",
+      "[S6] Scenariovergelijking: Verschillen tussen scenario's komen uitsluitend voort uit verschillen in timing en intensiteit van beheer; overige modelaannames blijven gelijk.",
+    ];
+    systematicRefs.forEach((line) => {
+      y = pdfAddParagraph(doc, line, y, layout, { fontSize: 9.3, lineHeight: 12, spacingAfter: 3 });
+    });
+    y += 4;
+
+    y = pdfAddSectionTitle(doc, "Bronnen en wetenschappelijke achtergrond", y, layout);
+    const sources = [
+      "[B1] Beverton, R.J.H. en Holt, S.J. Klassieke grondslag voor dichtheidsafhankelijke populatiemodellen.",
+      "[B2] Monceau, K. en Thiery, D. Studies naar nestdistributie en nestdichtheden van Vespa velutina op lokale schaal in Frankrijk.",
+      "[B3] Europese veldstudies over Vespa velutina: literatuur waarin stedelijke en landelijke nestdichtheden van enkele tot meer dan tien nesten per km2 worden gerapporteerd.",
+      "[B4] Beleidsmatige notitie: Dit model gebruikt wetenschappelijke inzichten als basis voor scenarioanalyse, maar vervangt geen lokale veldinventarisatie of operationele risicoanalyse.",
+    ];
+    sources.forEach((line) => {
+      y = pdfAddParagraph(doc, line, y, layout, { fontSize: 9.3, lineHeight: 12, spacingAfter: 3 });
+    });
+
+    y = pdfAddParagraph(
+      doc,
+      "De bronverwijzingen geven de wetenschappelijke achtergrond van de gekozen modelstructuur en de orde van grootte van gebruikte dichtheidsaannames. De concrete scenario-uitkomsten in dit rapport zijn volledig afhankelijk van de door de gebruiker ingevoerde parameters.",
+      y,
+      layout,
+      { fontSize: 9.3, lineHeight: 12, spacingAfter: 4 }
+    );
+
+    pdfAddPageNumbers(doc, layout);
     doc.save("aziatische-hoornaar-model.pdf");
   }
 
