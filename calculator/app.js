@@ -60,7 +60,7 @@
     c: { min: 200, max: 1000, integer: true },
     d_max: { min: 2, max: 25, integer: true },
     A: { min: 1, max: 150, integer: true },
-    N0: { min: 1, max: 150, integer: true },
+    N0: { min: 1, max: 500, integer: true },
     R_max: { min: 1.1, max: 10, integer: false },
     s: { min: 0.5, max: 0.99, integer: false },
     p_passief: { min: 0, max: 1, integer: false },
@@ -167,7 +167,7 @@
     if (p.A <= 0) messages.push("Oppervlakte (A) moet groter zijn dan 0.");
     if (p.A > 150) messages.push("Oppervlakte (A) mag maximaal 150 zijn.");
     if (p.N0 < 1) messages.push("Startpopulatie (N0) moet minimaal 1 zijn.");
-    if (p.N0 > 150) messages.push("Startpopulatie (N0) mag maximaal 150 zijn.");
+    if (p.N0 > 500) messages.push("Startpopulatie (N0) mag maximaal 500 zijn.");
     if (p.R_max <= 1) warnings.push("R_max is ≤ 1: populatie groeit dan niet of krimpt.");
     if (p.d_max <= 0) messages.push("d_max moet groter zijn dan 0.");
     if (p.p_passief < 0 || p.p_passief > 1) messages.push("Passief ruimingspercentage moet tussen 0 en 1 liggen.");
