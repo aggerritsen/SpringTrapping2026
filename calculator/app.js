@@ -676,6 +676,10 @@
 
       let x = layout.left;
       for (let i = 0; i < colCount; i += 1) {
+        const explicitAlign = cfg.columnAlign && cfg.columnAlign[i];
+        const isNumericColumn = Array.isArray(cfg.numericColumns) && cfg.numericColumns.includes(i);
+        const align = explicitAlign || (isNumericColumn ? "right" : "left");
+
         if (isHeader) {
           doc.setFillColor(240, 240, 240);
           doc.rect(x, y, widths[i], rowHeight, "FD");
@@ -685,7 +689,13 @@
         doc.setFont("helvetica", isHeader ? "bold" : "normal");
         doc.setFontSize(8.5);
         doc.setTextColor(30, 30, 30);
-        doc.text(wrapped[i], x + cellPadding, y + 10);
+        if (align === "right") {
+          doc.text(wrapped[i], x + widths[i] - cellPadding, y + 10, { align: "right" });
+        } else if (align === "center") {
+          doc.text(wrapped[i], x + widths[i] / 2, y + 10, { align: "center" });
+        } else {
+          doc.text(wrapped[i], x + cellPadding, y + 10);
+        }
         x += widths[i];
       }
 
@@ -699,6 +709,23 @@
   }
 
   function pdfRenderTable(doc, cfg, layout) {
+    const autoColumnStyles = {};
+    if (cfg.columnStyles) {
+      Object.keys(cfg.columnStyles).forEach((key) => {
+        autoColumnStyles[key] = { ...cfg.columnStyles[key] };
+      });
+    }
+    if (Array.isArray(cfg.numericColumns)) {
+      cfg.numericColumns.forEach((idx) => {
+        autoColumnStyles[idx] = { ...(autoColumnStyles[idx] || {}), halign: "right" };
+      });
+    }
+    if (cfg.columnAlign) {
+      Object.keys(cfg.columnAlign).forEach((key) => {
+        autoColumnStyles[key] = { ...(autoColumnStyles[key] || {}), halign: cfg.columnAlign[key] };
+      });
+    }
+
     if (typeof doc.autoTable === "function") {
       doc.autoTable({
         startY: cfg.startY,
@@ -720,7 +747,7 @@
           textColor: [20, 20, 20],
           fontStyle: "bold",
         },
-        columnStyles: cfg.columnStyles || {},
+        columnStyles: autoColumnStyles,
       });
       return (doc.lastAutoTable ? doc.lastAutoTable.finalY : cfg.startY) + 10;
     }
@@ -791,6 +818,7 @@
         startY: y,
         head: ["Scenario", "Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
         body: scenarioRows,
+        numericColumns: [1, 2, 3, 5],
         columnStyles: {
           0: { cellWidth: 130 },
           1: { cellWidth: 72 },
@@ -833,6 +861,7 @@
           ["Startjaar vroeg beheer", "t_start", nf0.format(params.t_start), "jaar", "Jaar waarin scenario 1 actief beheer start."],
           ["Simulatieduur", "T", nf0.format(params.T), "jaren", "Aantal gesimuleerde jaren."],
         ],
+        numericColumns: [2],
         columnStyles: {
           0: { cellWidth: 136 },
           1: { cellWidth: 48 },
@@ -845,13 +874,38 @@
       layout
     );
 
-    y = pdfAddParagraph(doc, "Afgeleide grootheid: K = d_max x A [S1]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 4 });
+    y = pdfAddParagraph(doc, "Afgeleide grootheid: K = d_max x A [S1, S7]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
       "De draagkracht K geeft de theoretische maximale populatieomvang binnen het gemodelleerde gebied onder de gekozen aanname voor maximale nestdichtheid.",
       y,
       layout,
       { fontSize: 9.5, lineHeight: 12, spacingAfter: 8 }
+    );
+
+    y = pdfAddSubTitle(doc, "Empirische achtergrond voor maximale nestdichtheid (d_max)", y, layout);
+    y = pdfAddParagraph(
+      doc,
+      "De parameter d_max representeert de maximale nestdichtheid van Vespa velutina die in een gebied kan voorkomen wanneer de populatie zich volledig heeft gevestigd. Veldstudies in Europa laten zien dat de dichtheid sterk varieert afhankelijk van landschap en urbanisatiegraad [B5, B6, B7].",
+      y,
+      layout,
+      { fontSize: 9.4, lineHeight: 12, spacingAfter: 4 }
+    );
+    y = pdfAddParagraph(doc, "- ongeveer 5 nesten per km2 in landelijke gebieden", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 1 });
+    y = pdfAddParagraph(doc, "- ongeveer 10-12 nesten per km2 in stedelijke gebieden", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddParagraph(
+      doc,
+      "In sommige lokale studies zijn nog hogere waarden waargenomen, met uitschieters tot ongeveer 19 nesten per km2 of meer in sterk verstedelijkte of voedselrijke landschappen. Deze waarden worden in dit model gebruikt als plausibele bandbreedte voor scenarioanalyse van populatieontwikkeling [B5, B6, B7].",
+      y,
+      layout,
+      { fontSize: 9.4, lineHeight: 12, spacingAfter: 4 }
+    );
+    y = pdfAddParagraph(
+      doc,
+      "De gekozen waarde voor d_max heeft grote invloed op de lange-termijnpopulatie en daarmee op de potentiele omvang van latere beheermaatregelen. Lagere waarden vertegenwoordigen meer open of landelijke landschappen, terwijl hogere waarden passen bij stedelijke of voedselrijke gebieden waar Vespa velutina dichter kan voorkomen [S7].",
+      y,
+      layout,
+      { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 }
     );
 
     y = pdfAddSectionTitle(doc, "Model voor populatiedynamiek", y, layout);
@@ -876,7 +930,7 @@
     y = pdfAddSubTitle(doc, "R_max", y, layout);
     y = pdfAddParagraph(doc, "Bepaalt hoe snel de populatie groeit wanneer deze nog ver onder de draagkracht ligt. Hogere waarden leiden tot snellere uitbreiding in de vroege fase.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
     y = pdfAddSubTitle(doc, "d_max", y, layout);
-    y = pdfAddParagraph(doc, "Bepaalt samen met de oppervlakte de potentiele maximale nestbezetting van het gebied. Hogere waarden leiden tot een hogere theoretische draagkracht [S1].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddParagraph(doc, "Bepaalt samen met de oppervlakte de potentiele maximale nestbezetting van het gebied. Hogere waarden leiden tot een hogere theoretische draagkracht [S1, S7]. Empirische studies rapporteren voor Vespa velutina vaak ordegroottes rond circa 5 nesten per km2 in landelijke contexten en circa 10-12 nesten per km2 in stedelijke contexten, met lokale maxima tot ongeveer 15-19 nesten per km2 [B5, B6, B7].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
     y = pdfAddSubTitle(doc, "A", y, layout);
     y = pdfAddParagraph(doc, "Grotere gebieden kunnen bij gelijke dichtheid meer nesten dragen. Daardoor nemen zowel potentiele populatieomvang als latere beheersinspanning toe [S1].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 3 });
     y = pdfAddSubTitle(doc, "p_beheer", y, layout);
@@ -951,6 +1005,7 @@
             pdfFormatSaturationYear(section.result.saturationYear),
             nfCurrency.format(section.result.peakCost),
           ]],
+          numericColumns: [0, 1, 2, 4],
           columnStyles: {
             0: { cellWidth: 108 },
             1: { cellWidth: 118 },
@@ -962,7 +1017,38 @@
         },
         layout
       );
-      y += 2;
+      y = pdfAddParagraph(doc, "Volledige berekende tabel per jaar:", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 2 });
+      y = pdfRenderTable(
+        doc,
+        {
+          startY: y,
+          head: ["Jaar", "Beginpopulatie", "Verwijderingspercentage", "Verwijderde nesten", "Populatie na verwijdering", "Populatie volgend jaar", "Jaarlijkse kosten", "Cumulatieve kosten"],
+          body: section.result.rows.map((row) => [
+            nf0.format(row.year),
+            nf0.format(row.N_t),
+            nf2.format(row.p_t),
+            nf0.format(row.V_t),
+            nf0.format(row.N_rest),
+            nf0.format(row.N_next),
+            nfCurrency.format(row.cost),
+            nfCurrency.format(row.cumulativeCost),
+          ]),
+          numericColumns: [0, 1, 2, 3, 4, 5, 6, 7],
+          columnStyles: {
+            0: { cellWidth: 32 },
+            1: { cellWidth: 58 },
+            2: { cellWidth: 58 },
+            3: { cellWidth: 58 },
+            4: { cellWidth: 58 },
+            5: { cellWidth: 58 },
+            6: { cellWidth: 86 },
+            7: { cellWidth: 87 },
+          },
+          columnPercents: [0.06, 0.12, 0.12, 0.12, 0.12, 0.12, 0.17, 0.17],
+        },
+        layout
+      );
+      y += 4;
     });
 
     y = pdfAddSectionTitle(doc, "Grafieken", y, layout);
@@ -1008,6 +1094,7 @@
       "[S4] Kosten: De jaarlijkse kosten volgen lineair uit het aantal verwijderde nesten via C_t = c x V_t.",
       "[S5] Verzadiging: Het verzadigingsjaar is afhankelijk van de gekozen drempel s x K en is dus modelmatig gedefinieerd.",
       "[S6] Scenariovergelijking: Verschillen tussen scenario's komen uitsluitend voort uit verschillen in timing en intensiteit van beheer; overige modelaannames blijven gelijk.",
+      "[S7] Maximale nestdichtheid: De parameter d_max bepaalt samen met de oppervlakte van het gemodelleerde gebied de draagkracht K van het systeem. Alle populatie-uitkomsten in het model zijn daarom direct afhankelijk van de gekozen aannames over maximale nestdichtheid.",
     ];
     systematicRefs.forEach((line) => {
       y = pdfAddParagraph(doc, line, y, layout, { fontSize: 9.3, lineHeight: 12, spacingAfter: 3 });
@@ -1020,6 +1107,9 @@
       "[B2] Monceau, K. en Thiery, D. Studies naar nestdistributie en nestdichtheden van Vespa velutina op lokale schaal in Frankrijk.",
       "[B3] Europese veldstudies over Vespa velutina: literatuur waarin stedelijke en landelijke nestdichtheden van enkele tot meer dan tien nesten per km2 worden gerapporteerd.",
       "[B4] Beleidsmatige notitie: Dit model gebruikt wetenschappelijke inzichten als basis voor scenarioanalyse, maar vervangt geen lokale veldinventarisatie of operationele risicoanalyse.",
+      "[B5] Monceau, K., Bonnard, O. en Thiery, D. Vespa velutina nest distribution at a local scale: an 8-year survey. Monitoringstudie van nestdichtheden in Zuidwest-Frankrijk (Arcachon / Andernos-les-Bains), met als belangrijke bevinding circa 10 nesten per km2 in stedelijke zones.",
+      "[B6] Veldstudies en monitoringprogramma's in Portugal en Frankrijk rapporteren gemiddelde stedelijke dichtheden van circa 5 +/- 3 nesten per km2 en hogere lokale maxima.",
+      "[B7] Europese monitoringrapporten over Vespa velutina tonen dat lokale dichtheden sterk kunnen varieren afhankelijk van voedselbeschikbaarheid, urbanisatie en detectie-inspanning, met gemelde maxima tot circa 15-19 nesten per km2.",
     ];
     sources.forEach((line) => {
       y = pdfAddParagraph(doc, line, y, layout, { fontSize: 9.3, lineHeight: 12, spacingAfter: 3 });
