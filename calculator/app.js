@@ -16,7 +16,7 @@
     d_max: 12,
     A: 30,
     N0: 15,
-    R_max: 4.5,
+    R_max: 5,
     s: 0.95,
     p_passief: 0.3,
     p_beheer: 0.8,
