@@ -154,8 +154,55 @@ html, body {
   border-radius: 8px;
 }
 
+.field-row input[type="text"] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
 .field-row input[type="range"] {
   width: 100%;
+}
+
+.field-row-name {
+  grid-template-columns: 1fr;
+}
+
+.field-row-with-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.field-row-with-actions #tRange {
+  flex: 0 0 160px !important;
+  flex-shrink: 0 !important;
+  width: 160px !important;
+  min-width: 160px !important;
+  max-width: 160px !important;
+}
+
+.field-row-with-actions #tInput {
+  width: 90px;
+  min-width: 90px;
+}
+
+.field-row-with-actions .unit {
+  white-space: nowrap;
+}
+
+.field-row-with-actions .btn {
+  white-space: nowrap;
+  padding: 7px 10px;
+  flex: 0 0 auto;
+}
+
+.field-row-with-actions #btnReset {
+  margin-left: 42px;
+  white-space: normal;
+  line-height: 1.1;
+  text-align: center;
 }
 
 .unit {
@@ -307,6 +354,15 @@ html, body {
 
   .field-row {
     grid-template-columns: 1fr 80px auto;
+  }
+
+  .field-row-with-actions #tInput {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  .field-row-with-actions #btnReset {
+    margin-left: 10px;
   }
 
   .footer {

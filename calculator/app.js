@@ -11,6 +11,10 @@
 (function () {
   "use strict";
 
+  const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
+  const DEFAULT_SIMULATION_NAME = "";
+  const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
+
   const DEFAULTS = {
     c: 500,
     d_max: 12,
@@ -34,6 +38,7 @@
     validation: document.getElementById("validation"),
     summary: document.getElementById("summary"),
     messages: document.getElementById("messages"),
+    simulationNameInput: document.getElementById("simulationNameInput"),
     scenarioTable: document.getElementById("scenarioTable"),
     detailTable: document.getElementById("detailTable"),
     btnReset: document.getElementById("btnReset"),
@@ -71,6 +76,7 @@
 
   const state = {
     params: { ...DEFAULTS },
+    simulationName: DEFAULT_SIMULATION_NAME,
     results: null,
     activeScenario: "scenario1",
     charts: {
@@ -109,6 +115,38 @@
     return Math.max(0, Math.round(value));
   }
 
+  function sanitizeSimulationName(value) {
+    return String(value == null ? "" : value).replace(/\s+/g, " ").trim();
+  }
+
+  function readSimulationNameFromInput() {
+    if (!elements.simulationNameInput) return;
+    const cleaned = sanitizeSimulationName(elements.simulationNameInput.value);
+    state.simulationName = cleaned;
+    elements.simulationNameInput.value = cleaned;
+  }
+
+  function getSimulationName(value) {
+    const cleaned = sanitizeSimulationName(value);
+    return cleaned || FALLBACK_SIMULATION_NAME;
+  }
+
+  function toFileSlug(value) {
+    const normalized = String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    return normalized
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .replace(/-+/g, "-");
+  }
+
+  function buildExportFilename(extension, simulationName) {
+    const safeName = toFileSlug(getSimulationName(simulationName)) || "simulatie";
+    return `${EXPORT_FILE_BASENAME}-${safeName}.${extension}`;
+  }
+
   function syncInputs() {
     inputMap.forEach((item) => {
       const range = document.getElementById(item.range);
@@ -139,6 +177,10 @@
     state.params = Object.fromEntries(
       Object.keys(DEFAULTS).map((key) => [key, sanitizeParam(key, DEFAULTS[key])])
     );
+    state.simulationName = DEFAULT_SIMULATION_NAME;
+    if (elements.simulationNameInput) {
+      elements.simulationNameInput.value = DEFAULT_SIMULATION_NAME;
+    }
   }
 
   function readParamsFromInputs() {
@@ -482,15 +524,22 @@
     `;
   }
 
-  function buildCsv(results, params, summary) {
+  function buildCsv(results, params, summary, simulationName) {
     const lines = [];
     const now = new Date();
     const timestamp = now.toLocaleString("nl-NL");
+    const effectiveSimulationName = getSimulationName(simulationName);
 
     lines.push("Metadata");
     lines.push(["Exportdatum", timestamp].join(";"));
     lines.push(["Modelnaam", "Populatie- en kostenmodel Aziatische hoornaar"].join(";"));
+    lines.push(["Simulatienaam", effectiveSimulationName].join(";"));
     lines.push(["Simulatieduur", params.T].join(";"));
+    lines.push("");
+
+    lines.push("Managementsamenvatting");
+    lines.push(["Simulatienaam", effectiveSimulationName].join(";"));
+    lines.push(["Simulatieduur", `${params.T} jaren`].join(";"));
     lines.push("");
 
     lines.push("Inputparameters");
@@ -544,12 +593,12 @@
     return lines.join("\n");
   }
 
-  function exportCSV(results, params, summary) {
-    const csv = buildCsv(results, params, summary);
+  function exportCSV(results, params, summary, simulationName) {
+    const csv = buildCsv(results, params, summary, simulationName);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "aziatische-hoornaar-model.csv";
+    link.download = buildExportFilename("csv", simulationName);
     link.click();
     URL.revokeObjectURL(link.href);
   }
@@ -765,11 +814,12 @@
     }
   }
 
-  async function exportPDF(results, params, summary) {
+  async function exportPDF(results, params, summary, simulationName) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const layout = pdfCreateLayout(doc);
     const modelVersion = "1.0";
+    const effectiveSimulationName = getSimulationName(simulationName);
     let y = layout.top;
 
     const scenarioRows = [
@@ -810,6 +860,7 @@
     );
 
     y = pdfAddSectionTitle(doc, "Managementsamenvatting", y, layout);
+    y = pdfAddParagraph(doc, `Simulatienaam: ${effectiveSimulationName}`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 2 });
     y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
     y = pdfRenderTable(
       doc,
@@ -1123,7 +1174,7 @@
     );
 
     pdfAddPageNumbers(doc, layout);
-    doc.save("aziatische-hoornaar-model.pdf");
+    doc.save(buildExportFilename("pdf", simulationName));
   }
 
   function buildResults(params) {
@@ -1142,6 +1193,7 @@
   }
 
   function renderAll() {
+    readSimulationNameFromInput();
     readParamsFromInputs();
     const params = { ...state.params };
     const validation = validateParams(params);
@@ -1192,14 +1244,16 @@
 
     elements.btnCsv.addEventListener("click", () => {
       if (!state.results) return;
+      readSimulationNameFromInput();
       const { summary } = buildResults(state.params);
-      exportCSV(state.results, state.params, summary);
+      exportCSV(state.results, state.params, summary, state.simulationName);
     });
 
     elements.btnPdf.addEventListener("click", () => {
       if (!state.results) return;
+      readSimulationNameFromInput();
       const { summary } = buildResults(state.params);
-      exportPDF(state.results, state.params, summary);
+      exportPDF(state.results, state.params, summary, state.simulationName);
     });
   }
 

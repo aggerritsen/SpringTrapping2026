@@ -35,15 +35,19 @@
       <section class="panel">
         <div class="panel-header">
           <h2>Invoerparameters</h2>
-          <div class="panel-actions">
-            <button id="btnReset" class="btn secondary" type="button">Herstel standaardwaarden</button>
-            <button id="btnCalc" class="btn primary" type="button">Bereken</button>
-          </div>
         </div>
 
         <div id="validation" class="validation" role="status" aria-live="polite"></div>
 
         <div class="inputs">
+          <div class="field">
+            <label for="simulationNameInput">Naam model/simulatie</label>
+            <div class="field-row field-row-name">
+              <input id="simulationNameInput" type="text" maxlength="120" placeholder="Bijv. Gemeente" />
+              <span class="unit">CSV/PDF</span>
+            </div>
+          </div>
+
           <div class="field">
             <label for="cRange">Kostprijs per nestverwijdering (c)</label>
             <div class="field-row">
@@ -127,10 +131,12 @@
 
           <div class="field">
             <label for="tRange">Simulatieduur (T)</label>
-            <div class="field-row">
+            <div class="field-row field-row-with-actions">
               <input id="tRange" type="range" min="1" max="25" step="1" value="10" />
               <input id="tInput" type="number" min="1" max="25" step="1" value="10" />
               <span class="unit">jaar</span>
+              <button id="btnReset" class="btn secondary" type="button">Standaardwaarden</button>
+              <button id="btnCalc" class="btn primary" type="button">Bereken</button>
             </div>
           </div>
         </div>
