@@ -8,7 +8,7 @@ Deze pagina (`/calculator`) is een volledig client-side model (HTML/CSS/vanilla 
 ## Model in het kort
 - Draagkracht: `K = d_max * A`
 - Gecorrigeerde verzadigingsdrempel: `D_verzadiging = s * K * (1 - p_passief)`
-- Gecombineerde verwijdering: `p_t = 1 - (1 - p_passief) * (1 - p_actief_t)`
+- Toegepaste verwijdering: `p_t = p_actief_t` als actief beheer aan staat, anders `p_t = p_passief`
 - Jaarlijkse verwijdering: `V_t = p_t * N_t`
 - Restpopulatie: `N_rest = (1 - p_t) * N_t`
 - Volgend jaar: `N_(t+1) = (R_max * N_rest) / (1 + ((R_max - 1) / K) * N_rest)`
@@ -18,10 +18,10 @@ Deze pagina (`/calculator`) is een volledig client-side model (HTML/CSS/vanilla 
 Het kritische beheerpercentage is `p_kritisch = 1 - (1 / R_max)` en wordt expliciet weergegeven.
 
 ### Scenario-logica
-- `p_passief` (standaard 0,30) wordt elk jaar in alle scenario’s toegepast.
-- Scenario 1: vanaf `t_start` komt daar actief beheer (`p_beheer`) bovenop.
+- `p_passief` (standaard 0,30) wordt gebruikt in jaren zonder actief beheer.
+- Scenario 1: vanaf `t_start` geldt actief beheer (`p_t = p_beheer`) in plaats van passieve ruiming.
 - Scenario 2: geen actief beheer (`p_actief_t = 0`), dus alleen passieve ruiming.
-- Scenario 3: actief beheer start pas als `N_t >= D_verzadiging`; tot dan alleen passieve ruiming.
+- Scenario 3: actief beheer start pas als `N_t >= D_verzadiging`; vanaf dat moment geldt `p_t = p_beheer`.
 
 ## Bestanden
 - `calculator/index.html`: UI en structuur

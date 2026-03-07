@@ -17,7 +17,7 @@
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
 
   const DEFAULTS = {
-    c: 500,
+    c: 300,
     d_max: 12,
     A: 30,
     N0: 15,
@@ -256,7 +256,9 @@
   }
 
   function combineRemovalRates(passiveRate, activeRate) {
-    return 1 - (1 - passiveRate) * (1 - activeRate);
+    const pPassive = clamp(Number(passiveRate) || 0, 0, 1);
+    const pActive = clamp(Number(activeRate) || 0, 0, 1);
+    return pActive > 0 ? pActive : pPassive;
   }
 
   function calcSaturationThreshold(params) {
@@ -379,13 +381,13 @@
   }
 
   function renderSummary(summary, params) {
-    const pEffectiefActief = combineRemovalRates(params.p_passief, params.p_beheer);
+    const pActiefInActieveJaren = clamp(Number(params.p_beheer) || 0, 0, 1);
     const cards = [
       { label: "Draagkracht K", value: nf0.format(summary.carryCapacity) + " nesten" },
       { label: "Verzadigingsdrempel (met p_passief-correctie)", value: nf0.format(summary.saturationThreshold) + " nesten" },
       { label: "Kritisch beheerpercentage p_kritisch", value: nf2.format(summary.pkritisch) },
       { label: "Passieve ruiming p_passief", value: nf2.format(params.p_passief) },
-      { label: "Totaal bij actief beheer (passief + actief)", value: nf2.format(pEffectiefActief) },
+      { label: "Actieve ruiming in actieve jaren (p_beheer)", value: nf2.format(pActiefInActieveJaren) },
       { label: "Verzadigingsjaar scenario 2", value: formatSaturationYear(summary.saturationYearScenario2) },
       { label: "Verzadigingsjaar scenario 3", value: formatSaturationYear(summary.saturationYearScenario3) },
       { label: "Totale kosten scenario 1", value: nfCurrency.format(summary.totalCosts.scenario1) },
@@ -410,8 +412,8 @@
       .join("");
 
     const warnings = [];
-    if (pEffectiefActief <= summary.pkritisch) {
-      warnings.push("Het gecombineerde verwijderingspercentage (passief + actief) ligt niet boven het theoretische omslagpunt bij lage dichtheid.");
+    if (pActiefInActieveJaren <= summary.pkritisch) {
+      warnings.push("Het actieve verwijderingspercentage p_beheer ligt niet boven het theoretische omslagpunt bij lage dichtheid.");
     }
     if (!summary.saturationYearScenario3) {
       warnings.push("Scenario 3 bereikt geen verzadiging binnen de simulatieduur; alleen passieve ruiming wordt toegepast.");
@@ -1105,6 +1107,10 @@
       y += 4;
     });
 
+    doc.addPage();
+    y = layout.top;
+    y = pdfAddSectionTitle(doc, "Toelichting op model en aannames", y, layout);
+
     y = pdfAddParagraph(doc, "Afgeleide grootheid: K = d_max x A [S1, S7]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
@@ -1173,6 +1179,8 @@
     y = pdfAddSubTitle(doc, "s", y, layout);
     y = pdfAddParagraph(doc, "Geeft aan bij welk aandeel van de draagkracht in dit model wordt gesproken van verzadiging. Dit is een analytische drempel en geen absoluut ecologisch omslagpunt [S5].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 });
 
+    doc.addPage();
+    y = layout.top;
     y = pdfAddSectionTitle(doc, "Systematische verwijzingen", y, layout);
     const systematicRefs = [
       "[S1] Draagkracht: De berekende draagkracht K volgt rechtstreeks uit de aanname K = d_max x A.",
@@ -1210,8 +1218,9 @@
       { fontSize: 9.3, lineHeight: 12, spacingAfter: 4 }
     );
 
-    y = pdfAddSectionTitle(doc, "Contact adres", y, layout);
-    y = pdfAddParagraph(doc, "ah@imkersleiden.nl", y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
+    y = pdfAddSectionTitle(doc, "Contact en support", y, layout);
+    y = pdfAddParagraph(doc, "Noch aan dit rapport, noch aan de inhoud kunnen rechten worden ontleend.", y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 3 });
+    y = pdfAddParagraph(doc, "Contactadres: ah@imkersleiden.nl", y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
 
     pdfAddPageNumbers(doc, layout);
     doc.save(buildExportFilename("pdf", simulationName));
