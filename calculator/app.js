@@ -12,6 +12,7 @@
   "use strict";
 
   const CURRENT_YEAR = new Date().getFullYear();
+  const REFERENCE_SEASON_YEAR = CURRENT_YEAR - 1;
   const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
   const DEFAULT_SIMULATION_NAME = "";
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
@@ -118,7 +119,7 @@
 
   function calcCalendarYearFromSimulationYear(simulationYearIndex) {
     const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
-    return CURRENT_YEAR + yearIndex - 1;
+    return REFERENCE_SEASON_YEAR + yearIndex - 1;
   }
 
   function formatCalendarYearFromSimulationYear(simulationYearIndex) {
@@ -728,7 +729,7 @@
       lines.push("De populatiebasis bij beheer na verzadiging blijft in deze run vergelijkbaar met of lager dan die bij vroeg beheer.");
     }
 
-    lines.push("Het referentiescenario zonder actief beheer laat zien tot welk populatieniveau de populatie onder deze aannames kan doorgroeien.");
+    lines.push("Het referentiescenario zonder actief beheer laat zien tot welk niveau de populatie onder deze aannames kan doorgroeien.");
     lines.push(`${scenarioLabels[cheapest.key]} heeft in deze run de laagste totale kosten, terwijl ${scenarioLabels[lowestEndPop.key]} de laagste eindpopulatie oplevert.`);
 
     return lines.slice(0, 4);
@@ -896,6 +897,13 @@
     y = pdfAddSectionTitle(doc, "Managementsamenvatting", y, layout);
     y = pdfAddParagraph(doc, `Simulatienaam: ${effectiveSimulationName}`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 2 });
     y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
+    y = pdfAddParagraph(
+      doc,
+      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het vorige seizoen (${REFERENCE_SEASON_YEAR})`,
+      y,
+      layout,
+      { fontSize: 9.3, lineHeight: 12, spacingAfter: 6 }
+    );
     y = pdfRenderTable(
       doc,
       {
