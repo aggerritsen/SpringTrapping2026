@@ -308,6 +308,11 @@ html, body {
   text-align: left;
 }
 
+.table th.right,
+.table td.right {
+  text-align: right;
+}
+
 .tabs {
   display: flex;
   gap: 6px;

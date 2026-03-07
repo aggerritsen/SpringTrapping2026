@@ -493,7 +493,7 @@
           <td>${nfCurrency.format(r.totalCost)}</td>
           <td>${nf0.format(r.totalRemoved)}</td>
           <td>${nf0.format(r.endPopulation)}</td>
-          <td>${formatSaturationYear(r.saturationYear)}</td>
+          <td class="right">${formatSaturationYear(r.saturationYear)}</td>
           <td>${nfCurrency.format(r.peakCost)}</td>
         </tr>
       `;
@@ -507,7 +507,7 @@
             <th>Totale kosten</th>
             <th>Totale verwijderde nesten</th>
             <th>Eindpopulatie</th>
-            <th>Verzadigingsjaar</th>
+            <th class="right">Verzadigingsjaar</th>
             <th>Piekjaarkosten</th>
           </tr>
         </thead>
@@ -903,6 +903,7 @@
         head: ["Scenario", "Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
         body: scenarioRows,
         numericColumns: [1, 2, 3, 5],
+        columnAlign: { 4: "right" },
         columnStyles: {
           0: { cellWidth: 130 },
           1: { cellWidth: 72 },
@@ -1060,6 +1061,7 @@
             nfCurrency.format(section.result.peakCost),
           ]],
           numericColumns: [0, 1, 2, 4],
+          columnAlign: { 3: "right" },
           columnStyles: {
             0: { cellWidth: 108 },
             1: { cellWidth: 118 },
