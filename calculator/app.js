@@ -115,6 +115,18 @@
     return Math.max(0, Math.round(value));
   }
 
+  function calcRealizedGrowthFactor(N_rest, N_nextRaw) {
+    const nRest = Number(N_rest);
+    const nNextRaw = Number(N_nextRaw);
+    if (!Number.isFinite(nRest) || nRest <= 0) return null;
+    if (!Number.isFinite(nNextRaw)) return null;
+    return nNextRaw / nRest;
+  }
+
+  function formatGrowthDisplay(value) {
+    return value == null ? "-" : nf2.format(value);
+  }
+
   function sanitizeSimulationName(value) {
     return String(value == null ? "" : value).replace(/\s+/g, " ").trim();
   }
@@ -284,7 +296,9 @@
       const p_t = combineRemovalRates(params.p_passief, p_actief_t);
       const V = Math.min(N, roundNestCount(p_t * N));
       const N_rest = N - V;
-      const N_next = roundNestCount((params.R_max * N_rest) / (1 + ((params.R_max - 1) / K) * N_rest));
+      const N_nextRaw = N_rest <= 0 ? 0 : (params.R_max * N_rest) / (1 + ((params.R_max - 1) / K) * N_rest);
+      const R_eff_t = calcRealizedGrowthFactor(N_rest, N_nextRaw);
+      const N_next = roundNestCount(N_nextRaw);
       const cost = params.c * V;
 
       cumulativeCost += cost;
@@ -298,6 +312,7 @@
         p_t,
         p_passief_t: params.p_passief,
         p_actief_t,
+        R_eff_t,
         V_t: V,
         N_rest,
         N_next,
@@ -495,6 +510,7 @@
           <td class="left">${SCENARIOS[r.scenario]}</td>
           <td>${nf0.format(r.N_t)}</td>
           <td>${nf2.format(r.p_t)}</td>
+          <td>${formatGrowthDisplay(r.R_eff_t)}</td>
           <td>${nf0.format(r.V_t)}</td>
           <td>${nf0.format(r.N_rest)}</td>
           <td>${nf0.format(r.N_next)}</td>
@@ -512,6 +528,7 @@
             <th>Scenario</th>
             <th>Beginpopulatie</th>
             <th>Verwijderingspercentage</th>
+            <th>R_eff (gerealiseerd)</th>
             <th>Verwijderde nesten</th>
             <th>Populatie na verwijdering</th>
             <th>Populatie volgend jaar</th>
@@ -573,7 +590,7 @@
     lines.push("");
 
     lines.push("Detailresultaten");
-    lines.push("Jaar;Scenario;Beginpopulatie;Verwijderingspercentage;Verwijderde nesten;Populatie na verwijdering;Populatie volgend jaar;Jaarlijkse kosten;Cumulatieve kosten");
+    lines.push("Jaar;Scenario;Beginpopulatie;Verwijderingspercentage;R_eff_gerealiseerd;Verwijderde nesten;Populatie na verwijdering;Populatie volgend jaar;Jaarlijkse kosten;Cumulatieve kosten");
     Object.values(results).forEach((r) => {
       r.rows.forEach((row) => {
         lines.push([
@@ -581,6 +598,7 @@
           r.label,
           row.N_t.toFixed(0),
           row.p_t.toFixed(4),
+          row.R_eff_t == null ? "" : row.R_eff_t.toFixed(4),
           row.V_t.toFixed(0),
           row.N_rest.toFixed(0),
           row.N_next.toFixed(0),
@@ -1072,29 +1090,31 @@
         doc,
         {
           startY: y,
-          head: ["Jaar", "Beginpopulatie", "Verwijderingspercentage", "Verwijderde nesten", "Populatie na verwijdering", "Populatie volgend jaar", "Jaarlijkse kosten", "Cumulatieve kosten"],
+          head: ["Jaar", "Beginpopulatie", "Verwijderingspercentage", "R_eff", "Verwijderde nesten", "Populatie na verwijdering", "Populatie volgend jaar", "Jaarlijkse kosten", "Cumulatieve kosten"],
           body: section.result.rows.map((row) => [
             nf0.format(row.year),
             nf0.format(row.N_t),
             nf2.format(row.p_t),
+            formatGrowthDisplay(row.R_eff_t),
             nf0.format(row.V_t),
             nf0.format(row.N_rest),
             nf0.format(row.N_next),
             nfCurrency.format(row.cost),
             nfCurrency.format(row.cumulativeCost),
           ]),
-          numericColumns: [0, 1, 2, 3, 4, 5, 6, 7],
+          numericColumns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
           columnStyles: {
-            0: { cellWidth: 32 },
-            1: { cellWidth: 58 },
-            2: { cellWidth: 58 },
-            3: { cellWidth: 58 },
-            4: { cellWidth: 58 },
-            5: { cellWidth: 58 },
-            6: { cellWidth: 86 },
-            7: { cellWidth: 87 },
+            0: { cellWidth: 28 },
+            1: { cellWidth: 46 },
+            2: { cellWidth: 48 },
+            3: { cellWidth: 40 },
+            4: { cellWidth: 50 },
+            5: { cellWidth: 50 },
+            6: { cellWidth: 50 },
+            7: { cellWidth: 90 },
+            8: { cellWidth: 90 },
           },
-          columnPercents: [0.06, 0.12, 0.12, 0.12, 0.12, 0.12, 0.17, 0.17],
+          columnPercents: [0.055, 0.095, 0.1, 0.08, 0.1, 0.1, 0.1, 0.185, 0.185],
         },
         layout
       );
