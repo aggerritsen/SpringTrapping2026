@@ -11,6 +11,7 @@
 (function () {
   "use strict";
 
+  const CURRENT_YEAR = new Date().getFullYear();
   const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
   const DEFAULT_SIMULATION_NAME = "";
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
@@ -113,6 +114,19 @@
 
   function roundNestCount(value) {
     return Math.max(0, Math.round(value));
+  }
+
+  function calcCalendarYearFromSimulationYear(simulationYearIndex) {
+    const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
+    return CURRENT_YEAR + yearIndex - 1;
+  }
+
+  function formatCalendarYearFromSimulationYear(simulationYearIndex) {
+    return String(calcCalendarYearFromSimulationYear(simulationYearIndex));
+  }
+
+  function formatSaturationYear(value) {
+    return value ? formatCalendarYearFromSimulationYear(value) : "Niet bereikt";
   }
 
   function calcRealizedGrowthFactor(N_rest, N_nextRaw) {
@@ -372,8 +386,8 @@
       { label: "Kritisch beheerpercentage p_kritisch", value: nf2.format(summary.pkritisch) },
       { label: "Passieve ruiming p_passief", value: nf2.format(params.p_passief) },
       { label: "Totaal bij actief beheer (passief + actief)", value: nf2.format(pEffectiefActief) },
-      { label: "Verzadigingsjaar scenario 2", value: summary.saturationYearScenario2 ? "Jaar " + summary.saturationYearScenario2 : "Niet bereikt" },
-      { label: "Verzadigingsjaar scenario 3", value: summary.saturationYearScenario3 ? "Jaar " + summary.saturationYearScenario3 : "Niet bereikt" },
+      { label: "Verzadigingsjaar scenario 2", value: formatSaturationYear(summary.saturationYearScenario2) },
+      { label: "Verzadigingsjaar scenario 3", value: formatSaturationYear(summary.saturationYearScenario3) },
       { label: "Totale kosten scenario 1", value: nfCurrency.format(summary.totalCosts.scenario1) },
       { label: "Totale kosten scenario 2", value: nfCurrency.format(summary.totalCosts.scenario2) },
       { label: "Totale kosten scenario 3", value: nfCurrency.format(summary.totalCosts.scenario3) },
@@ -417,7 +431,7 @@
   }
 
   function renderCharts(results, params) {
-    const labels = Array.from({ length: params.T }, (_, i) => `Jaar ${i + 1}`);
+    const labels = Array.from({ length: params.T }, (_, i) => formatCalendarYearFromSimulationYear(i + 1));
 
     const populationData = {
       labels,
@@ -450,7 +464,7 @@
         },
       },
       scales: {
-        x: { title: { display: true, text: "Jaar" } },
+        x: { title: { display: true, text: "Kalenderjaar" } },
         y: { title: { display: true, text: yLabel } },
       },
     });
@@ -477,7 +491,7 @@
           <td>${nfCurrency.format(r.totalCost)}</td>
           <td>${nf0.format(r.totalRemoved)}</td>
           <td>${nf0.format(r.endPopulation)}</td>
-          <td>${r.saturationYear ? "Jaar " + r.saturationYear : "Niet bereikt"}</td>
+          <td>${formatSaturationYear(r.saturationYear)}</td>
           <td>${nfCurrency.format(r.peakCost)}</td>
         </tr>
       `;
@@ -506,7 +520,7 @@
     const rows = data.map((r) => {
       return `
         <tr>
-          <td class="left">${r.year}</td>
+          <td class="left">${formatCalendarYearFromSimulationYear(r.year)}</td>
           <td class="left">${SCENARIOS[r.scenario]}</td>
           <td>${nf0.format(r.N_t)}</td>
           <td>${nf2.format(r.p_t)}</td>
@@ -524,7 +538,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Jaar</th>
+            <th>Kalenderjaar</th>
             <th>Scenario</th>
             <th>Beginpopulatie</th>
             <th>Verwijderingspercentage</th>
@@ -583,18 +597,18 @@
         r.totalCost.toFixed(2),
         r.totalRemoved.toFixed(0),
         r.endPopulation.toFixed(0),
-        r.saturationYear ? r.saturationYear : "Niet bereikt",
+        formatSaturationYear(r.saturationYear),
         r.peakCost.toFixed(2),
       ].join(";"));
     });
     lines.push("");
 
     lines.push("Detailresultaten");
-    lines.push("Jaar;Scenario;Beginpopulatie;Verwijderingspercentage;R_eff_gerealiseerd;Verwijderde nesten;Populatie na verwijdering;Populatie volgend jaar;Jaarlijkse kosten;Cumulatieve kosten");
+    lines.push("Kalenderjaar;Scenario;Beginpopulatie;Verwijderingspercentage;R_eff_gerealiseerd;Verwijderde nesten;Populatie na verwijdering;Populatie volgend jaar;Jaarlijkse kosten;Cumulatieve kosten");
     Object.values(results).forEach((r) => {
       r.rows.forEach((row) => {
         lines.push([
-          row.year,
+          calcCalendarYearFromSimulationYear(row.year),
           r.label,
           row.N_t.toFixed(0),
           row.p_t.toFixed(4),
@@ -675,7 +689,7 @@
   }
 
   function pdfFormatSaturationYear(value) {
-    return value ? `Jaar ${value}` : "Niet bereikt";
+    return formatSaturationYear(value);
   }
 
   function pdfBuildInsights(results) {
@@ -871,7 +885,7 @@
 
     y = pdfAddParagraph(
       doc,
-      "Dit rapport geeft een modelmatige vergelijking van drie beheerscenario's voor de Aziatische hoornaar. De uitkomsten zijn bedoeld voor scenarioanalyse en beleidsinterpretatie en niet als exacte voorspelling van toekomstige populatiegroottes.",
+      "Dit rapport geeft een modelmatige vergelijking van drie beheerscenario's voor de Aziatische hoornaar. De uitkomsten zijn bedoeld voor scenarioanalyse en beleidsinterpretatie en niet als exacte voorspelling van toekomstige populatiegroottes. Effectieve beheersmaatregelen bestaan uit een integratie van meerdere bestrijdingsmethoden, zoals een combinatie van nestverwijdering, spring-trapping en andere methoden.",
       y,
       layout,
       { fontSize: 10, lineHeight: 13, spacingAfter: 10 }
@@ -942,6 +956,155 @@
       layout
     );
 
+    y = pdfEnsureSpace(doc, y + 12, 24, layout);
+    y = pdfAddSectionTitle(doc, "Kritisch beheerpercentage", y, layout);
+    y = pdfRenderTable(
+      doc,
+      {
+        startY: y,
+        head: ["Grootheid", "Waarde", "Toelichting"],
+        body: [
+          ["Kritisch beheerpercentage p_kritisch", nf2.format(summary.pkritisch), "Theoretische ondergrens bij lage dichtheid."],
+          ["Gekozen beheerpercentage p_beheer", nf2.format(params.p_beheer), "Invoer voor actieve scenario's."],
+          ["Conclusie", params.p_beheer >= summary.pkritisch ? "Boven p_kritisch" : "Onder p_kritisch", params.p_beheer >= summary.pkritisch ? "Structurele afremming in de vroege fase is volgens het model plausibel." : "Structurele krimp in de vroege fase is volgens het model minder waarschijnlijk."],
+        ],
+        columnStyles: {
+          0: { cellWidth: 180 },
+          1: { cellWidth: 80 },
+          2: { cellWidth: 214 },
+        },
+        columnPercents: [0.38, 0.16, 0.46],
+      },
+      layout
+    );
+    y = pdfAddParagraph(
+      doc,
+      "Het kritische beheerpercentage is het theoretische minimumpercentage verwijdering dat bij lage dichtheid nodig is om populatiegroei af te remmen. Ligt het gekozen beheerpercentage daaronder, dan is structurele krimp in de vroege fase volgens het model minder waarschijnlijk.",
+      y,
+      layout,
+      { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 }
+    );
+
+    doc.addPage();
+    y = layout.top;
+    y = pdfAddSectionTitle(doc, "Grafieken", y, layout);
+
+    const chartBlocks = [
+      { id: "chartPopulation", title: "Populatieontwikkeling per scenario" },
+      { id: "chartCosts", title: "Cumulatieve kosten per scenario" },
+    ];
+
+    chartBlocks.forEach((chart) => {
+      y = pdfAddSubTitle(doc, chart.title, y, layout);
+      const canvas = document.getElementById(chart.id);
+      if (!canvas || typeof canvas.toDataURL !== "function") {
+        y = pdfAddParagraph(doc, "Grafiek niet beschikbaar in deze exportsessie.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
+        return;
+      }
+
+      let imgData = null;
+      try {
+        imgData = canvas.toDataURL("image/png", 1.0);
+      } catch (e) {
+        imgData = null;
+      }
+
+      if (!imgData) {
+        y = pdfAddParagraph(doc, "Grafiek kon niet worden opgenomen in de PDF.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
+        return;
+      }
+
+      const imgWidth = layout.pageWidth - layout.left - layout.right;
+      const ratio = canvas.width > 0 ? canvas.height / canvas.width : 0.42;
+      const imgHeight = Math.min(220, Math.max(140, imgWidth * ratio));
+      y = pdfEnsureSpace(doc, y, imgHeight + 8, layout);
+      doc.addImage(imgData, "PNG", layout.left, y, imgWidth, imgHeight, undefined, "FAST");
+      y += imgHeight + 10;
+    });
+
+    y = pdfAddSectionTitle(doc, "Resultaten per scenario", y, layout);
+
+    const scenarioSections = [
+      {
+        title: "Scenario 1 - vroeg starten met beheer",
+        description: "Vanaf jaar t_start wordt jaarlijks een fractie p_beheer van de nesten verwijderd.",
+        result: results.scenario1,
+      },
+      {
+        title: "Scenario 2 - geen beheer",
+        description: "Er vindt geen actieve nestverwijdering plaats. Dit scenario fungeert als referentiescenario.",
+        result: results.scenario2,
+      },
+      {
+        title: "Scenario 3 - beheer na verzadiging",
+        description: "Er wordt pas actief verwijderd zodra de populatie de gekozen verzadigingsdrempel bereikt.",
+        result: results.scenario3,
+      },
+    ];
+
+    scenarioSections.forEach((section) => {
+      y = pdfAddSubTitle(doc, section.title, y, layout);
+      y = pdfAddParagraph(doc, `${section.description} [S6]`, y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 4 });
+      y = pdfRenderTable(
+        doc,
+        {
+          startY: y,
+          head: ["Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
+          body: [[
+            nfCurrency.format(section.result.totalCost),
+            nf0.format(section.result.totalRemoved),
+            nf0.format(section.result.endPopulation),
+            pdfFormatSaturationYear(section.result.saturationYear),
+            nfCurrency.format(section.result.peakCost),
+          ]],
+          numericColumns: [0, 1, 2, 4],
+          columnStyles: {
+            0: { cellWidth: 108 },
+            1: { cellWidth: 118 },
+            2: { cellWidth: 82 },
+            3: { cellWidth: 92 },
+            4: { cellWidth: 92 },
+          },
+          columnPercents: [0.22, 0.24, 0.17, 0.19, 0.18],
+        },
+        layout
+      );
+      y = pdfAddParagraph(doc, "Volledige berekende tabel per jaar:", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 2 });
+      y = pdfRenderTable(
+        doc,
+        {
+          startY: y,
+          head: ["Kalenderjaar", "Beginpopulatie", "Verwijderingspercentage", "R_eff", "Verwijderde nesten", "Populatie na verwijdering", "Populatie volgend jaar", "Jaarlijkse kosten", "Cumulatieve kosten"],
+          body: section.result.rows.map((row) => [
+            formatCalendarYearFromSimulationYear(row.year),
+            nf0.format(row.N_t),
+            nf2.format(row.p_t),
+            formatGrowthDisplay(row.R_eff_t),
+            nf0.format(row.V_t),
+            nf0.format(row.N_rest),
+            nf0.format(row.N_next),
+            nfCurrency.format(row.cost),
+            nfCurrency.format(row.cumulativeCost),
+          ]),
+          numericColumns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+          columnStyles: {
+            0: { cellWidth: 28 },
+            1: { cellWidth: 46 },
+            2: { cellWidth: 48 },
+            3: { cellWidth: 40 },
+            4: { cellWidth: 50 },
+            5: { cellWidth: 50 },
+            6: { cellWidth: 50 },
+            7: { cellWidth: 90 },
+            8: { cellWidth: 90 },
+          },
+          columnPercents: [0.055, 0.095, 0.1, 0.08, 0.1, 0.1, 0.1, 0.185, 0.185],
+        },
+        layout
+      );
+      y += 4;
+    });
+
     y = pdfAddParagraph(doc, "Afgeleide grootheid: K = d_max x A [S1, S7]", y, layout, { fontSize: 10, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
@@ -1010,152 +1173,6 @@
     y = pdfAddSubTitle(doc, "s", y, layout);
     y = pdfAddParagraph(doc, "Geeft aan bij welk aandeel van de draagkracht in dit model wordt gesproken van verzadiging. Dit is een analytische drempel en geen absoluut ecologisch omslagpunt [S5].", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 });
 
-    y = pdfAddSectionTitle(doc, "Kritisch beheerpercentage", y, layout);
-    y = pdfRenderTable(
-      doc,
-      {
-        startY: y,
-        head: ["Grootheid", "Waarde", "Toelichting"],
-        body: [
-          ["Kritisch beheerpercentage p_kritisch", nf2.format(summary.pkritisch), "Theoretische ondergrens bij lage dichtheid."],
-          ["Gekozen beheerpercentage p_beheer", nf2.format(params.p_beheer), "Invoer voor actieve scenario's."],
-          ["Conclusie", params.p_beheer >= summary.pkritisch ? "Boven p_kritisch" : "Onder p_kritisch", params.p_beheer >= summary.pkritisch ? "Structurele afremming in de vroege fase is volgens het model plausibel." : "Structurele krimp in de vroege fase is volgens het model minder waarschijnlijk."],
-        ],
-        columnStyles: {
-          0: { cellWidth: 180 },
-          1: { cellWidth: 80 },
-          2: { cellWidth: 214 },
-        },
-        columnPercents: [0.38, 0.16, 0.46],
-      },
-      layout
-    );
-    y = pdfAddParagraph(
-      doc,
-      "Het kritische beheerpercentage is het theoretische minimumpercentage verwijdering dat bij lage dichtheid nodig is om populatiegroei af te remmen. Ligt het gekozen beheerpercentage daaronder, dan is structurele krimp in de vroege fase volgens het model minder waarschijnlijk.",
-      y,
-      layout,
-      { fontSize: 9.4, lineHeight: 12, spacingAfter: 8 }
-    );
-
-    y = pdfAddSectionTitle(doc, "Resultaten per scenario", y, layout);
-
-    const scenarioSections = [
-      {
-        title: "Scenario 1 - vroeg starten met beheer",
-        description: "Vanaf jaar t_start wordt jaarlijks een fractie p_beheer van de nesten verwijderd.",
-        result: results.scenario1,
-      },
-      {
-        title: "Scenario 2 - geen beheer",
-        description: "Er vindt geen actieve nestverwijdering plaats. Dit scenario fungeert als referentiescenario.",
-        result: results.scenario2,
-      },
-      {
-        title: "Scenario 3 - beheer na verzadiging",
-        description: "Er wordt pas actief verwijderd zodra de populatie de gekozen verzadigingsdrempel bereikt.",
-        result: results.scenario3,
-      },
-    ];
-
-    scenarioSections.forEach((section) => {
-      y = pdfAddSubTitle(doc, section.title, y, layout);
-      y = pdfAddParagraph(doc, `${section.description} [S6]`, y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 4 });
-      y = pdfRenderTable(
-        doc,
-        {
-          startY: y,
-          head: ["Totale kosten", "Totaal verwijderde nesten", "Eindpopulatie", "Verzadigingsjaar", "Piekjaarkosten"],
-          body: [[
-            nfCurrency.format(section.result.totalCost),
-            nf0.format(section.result.totalRemoved),
-            nf0.format(section.result.endPopulation),
-            pdfFormatSaturationYear(section.result.saturationYear),
-            nfCurrency.format(section.result.peakCost),
-          ]],
-          numericColumns: [0, 1, 2, 4],
-          columnStyles: {
-            0: { cellWidth: 108 },
-            1: { cellWidth: 118 },
-            2: { cellWidth: 82 },
-            3: { cellWidth: 92 },
-            4: { cellWidth: 92 },
-          },
-          columnPercents: [0.22, 0.24, 0.17, 0.19, 0.18],
-        },
-        layout
-      );
-      y = pdfAddParagraph(doc, "Volledige berekende tabel per jaar:", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 2 });
-      y = pdfRenderTable(
-        doc,
-        {
-          startY: y,
-          head: ["Jaar", "Beginpopulatie", "Verwijderingspercentage", "R_eff", "Verwijderde nesten", "Populatie na verwijdering", "Populatie volgend jaar", "Jaarlijkse kosten", "Cumulatieve kosten"],
-          body: section.result.rows.map((row) => [
-            nf0.format(row.year),
-            nf0.format(row.N_t),
-            nf2.format(row.p_t),
-            formatGrowthDisplay(row.R_eff_t),
-            nf0.format(row.V_t),
-            nf0.format(row.N_rest),
-            nf0.format(row.N_next),
-            nfCurrency.format(row.cost),
-            nfCurrency.format(row.cumulativeCost),
-          ]),
-          numericColumns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-          columnStyles: {
-            0: { cellWidth: 28 },
-            1: { cellWidth: 46 },
-            2: { cellWidth: 48 },
-            3: { cellWidth: 40 },
-            4: { cellWidth: 50 },
-            5: { cellWidth: 50 },
-            6: { cellWidth: 50 },
-            7: { cellWidth: 90 },
-            8: { cellWidth: 90 },
-          },
-          columnPercents: [0.055, 0.095, 0.1, 0.08, 0.1, 0.1, 0.1, 0.185, 0.185],
-        },
-        layout
-      );
-      y += 4;
-    });
-
-    y = pdfAddSectionTitle(doc, "Grafieken", y, layout);
-
-    const chartBlocks = [
-      { id: "chartPopulation", title: "Populatieontwikkeling per scenario" },
-      { id: "chartCosts", title: "Cumulatieve kosten per scenario" },
-    ];
-
-    chartBlocks.forEach((chart) => {
-      y = pdfAddSubTitle(doc, chart.title, y, layout);
-      const canvas = document.getElementById(chart.id);
-      if (!canvas || typeof canvas.toDataURL !== "function") {
-        y = pdfAddParagraph(doc, "Grafiek niet beschikbaar in deze exportsessie.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
-        return;
-      }
-
-      let imgData = null;
-      try {
-        imgData = canvas.toDataURL("image/png", 1.0);
-      } catch (e) {
-        imgData = null;
-      }
-
-      if (!imgData) {
-        y = pdfAddParagraph(doc, "Grafiek kon niet worden opgenomen in de PDF.", y, layout, { fontSize: 9.4, lineHeight: 12, spacingAfter: 5 });
-        return;
-      }
-
-      const imgWidth = layout.pageWidth - layout.left - layout.right;
-      const ratio = canvas.width > 0 ? canvas.height / canvas.width : 0.42;
-      const imgHeight = Math.min(220, Math.max(140, imgWidth * ratio));
-      y = pdfEnsureSpace(doc, y, imgHeight + 8, layout);
-      doc.addImage(imgData, "PNG", layout.left, y, imgWidth, imgHeight, undefined, "FAST");
-      y += imgHeight + 10;
-    });
-
     y = pdfAddSectionTitle(doc, "Systematische verwijzingen", y, layout);
     const systematicRefs = [
       "[S1] Draagkracht: De berekende draagkracht K volgt rechtstreeks uit de aanname K = d_max x A.",
@@ -1192,6 +1209,9 @@
       layout,
       { fontSize: 9.3, lineHeight: 12, spacingAfter: 4 }
     );
+
+    y = pdfAddSectionTitle(doc, "Contact adres", y, layout);
+    y = pdfAddParagraph(doc, "ah@imkersleiden.nl", y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
 
     pdfAddPageNumbers(doc, layout);
     doc.save(buildExportFilename("pdf", simulationName));
