@@ -11,10 +11,12 @@
 (function () {
   "use strict";
 
-  // NOTE: CURRENT_YEAR and REFERENCE_SEASON_YEAR were previously constants
-  // defined once at load time.  if the page stays open across a New Year they
-  // can drift one year out of sync and the x‑axis labels end up "one year
-  // too late".  to avoid that we compute the base year each time we need it.
+  // NOTE: year labels should correspond to the *current* calendar year
+  // for the first simulation step.  previous versions of the model assumed
+  // the start population referred to the prior season, which caused the
+  // x‑axis to be shifted back by one year.  the user expects the graph to
+  // begin with the actual current year, so we compute a reference year on the
+  // fly and do not subtract anything.
   const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
   const DEFAULT_SIMULATION_NAME = "";
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
@@ -122,8 +124,8 @@
   function calcCalendarYearFromSimulationYear(simulationYearIndex) {
     const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
     const currentYear = new Date().getFullYear();
-    const referenceSeasonYear = currentYear - 1; // always recompute
-    return referenceSeasonYear + yearIndex - 1;
+    const referenceYear = currentYear; // first simulated year = this calendar year
+    return referenceYear + yearIndex - 1;
   }
 
   function formatCalendarYearFromSimulationYear(simulationYearIndex) {
@@ -438,11 +440,9 @@
   }
 
   function renderCharts(results, params) {
-    // the first label corresponds to the previous season; formatCalendarYear
-    // already takes care of the -1 offset described above.
-    // build the labels fresh on every render so they follow the actual
-    // calendar year rather than the value that was in effect when the page
-    // first loaded.
+    // the first label corresponds to the current calendar year.  we recalc
+    // everything on each render so the chart stays accurate if a new year
+    // rolls around while the page is open.
     const labels = Array.from({ length: params.T }, (_, i) =>
       formatCalendarYearFromSimulationYear(i + 1)
     );
@@ -910,7 +910,8 @@
     y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
-      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het vorige seizoen (${new Date().getFullYear() - 1})`,      y,
+      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het huidige seizoen (${new Date().getFullYear()})`,
+      y,
       layout,
       { fontSize: 9.3, lineHeight: 12, spacingAfter: 6 }
     );
