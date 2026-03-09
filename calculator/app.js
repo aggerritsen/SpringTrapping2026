@@ -11,8 +11,10 @@
 (function () {
   "use strict";
 
-  const CURRENT_YEAR = new Date().getFullYear();
-  const REFERENCE_SEASON_YEAR = CURRENT_YEAR - 1;
+  // NOTE: CURRENT_YEAR and REFERENCE_SEASON_YEAR were previously constants
+  // defined once at load time.  if the page stays open across a New Year they
+  // can drift one year out of sync and the x‑axis labels end up "one year
+  // too late".  to avoid that we compute the base year each time we need it.
   const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
   const DEFAULT_SIMULATION_NAME = "";
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
@@ -119,7 +121,9 @@
 
   function calcCalendarYearFromSimulationYear(simulationYearIndex) {
     const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
-    return REFERENCE_SEASON_YEAR + yearIndex - 1;
+    const currentYear = new Date().getFullYear();
+    const referenceSeasonYear = currentYear - 1; // always recompute
+    return referenceSeasonYear + yearIndex - 1;
   }
 
   function formatCalendarYearFromSimulationYear(simulationYearIndex) {
@@ -434,7 +438,14 @@
   }
 
   function renderCharts(results, params) {
-    const labels = Array.from({ length: params.T }, (_, i) => formatCalendarYearFromSimulationYear(i + 1));
+    // the first label corresponds to the previous season; formatCalendarYear
+    // already takes care of the -1 offset described above.
+    // build the labels fresh on every render so they follow the actual
+    // calendar year rather than the value that was in effect when the page
+    // first loaded.
+    const labels = Array.from({ length: params.T }, (_, i) =>
+      formatCalendarYearFromSimulationYear(i + 1)
+    );
 
     const populationData = {
       labels,
@@ -899,8 +910,7 @@
     y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
-      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het vorige seizoen (${REFERENCE_SEASON_YEAR})`,
-      y,
+      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het vorige seizoen (${new Date().getFullYear() - 1})`,      y,
       layout,
       { fontSize: 9.3, lineHeight: 12, spacingAfter: 6 }
     );
