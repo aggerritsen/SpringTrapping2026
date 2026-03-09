@@ -234,7 +234,7 @@
     const warnings = [];
 
     if (p.A <= 0) messages.push("Oppervlakte (A) moet groter zijn dan 0.");
-    if (p.A > 150) messages.push("Oppervlakte (A) mag maximaal 300 zijn.");
+    if (p.A > 300) messages.push("Oppervlakte (A) mag maximaal 300 zijn.");
     if (p.N0 < 1) messages.push("Startpopulatie (N0) moet minimaal 1 zijn.");
     if (p.N0 > 500) messages.push("Startpopulatie (N0) mag maximaal 500 zijn.");
     if (p.R_max <= 1) warnings.push("R_max is ≤ 1: populatie groeit dan niet of krimpt.");
