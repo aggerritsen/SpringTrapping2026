@@ -11,12 +11,8 @@
 (function () {
   "use strict";
 
-  // NOTE: year labels should correspond to the *current* calendar year
-  // for the first simulation step.  previous versions of the model assumed
-  // the start population referred to the prior season, which caused the
-  // x‑axis to be shifted back by one year.  the user expects the graph to
-  // begin with the actual current year, so we compute a reference year on the
-  // fly and do not subtract anything.
+  const CURRENT_YEAR = new Date().getFullYear();
+  const REFERENCE_SEASON_YEAR = CURRENT_YEAR - 1;
   const EXPORT_FILE_BASENAME = "aziatische-hoornaar-model";
   const DEFAULT_SIMULATION_NAME = "";
   const FALLBACK_SIMULATION_NAME = "Onbenoemde simulatie";
@@ -123,13 +119,20 @@
 
   function calcCalendarYearFromSimulationYear(simulationYearIndex) {
     const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
-    const currentYear = new Date().getFullYear();
-    const referenceYear = currentYear; // first simulated year = this calendar year
-    return referenceYear + yearIndex - 1;
+    return REFERENCE_SEASON_YEAR + yearIndex - 1;
   }
 
   function formatCalendarYearFromSimulationYear(simulationYearIndex) {
     return String(calcCalendarYearFromSimulationYear(simulationYearIndex));
+  }
+
+  // chart labels should be based on the *current* calendar year rather than the
+  // reference season.  this helper is used only by `renderCharts` so that the
+  // underlying model still treats year‑1 as the base.
+  function formatCalendarYearForChart(simulationYearIndex) {
+    const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
+    const currentYear = new Date().getFullYear();
+    return String(currentYear + yearIndex - 1);
   }
 
   function formatSaturationYear(value) {
@@ -440,11 +443,12 @@
   }
 
   function renderCharts(results, params) {
-    // the first label corresponds to the current calendar year.  we recalc
-    // everything on each render so the chart stays accurate if a new year
-    // rolls around while the page is open.
+    // the first label should correspond to the current calendar year; the
+    // model calculations themselves still use REFERENCE_SEASON_YEAR (which is
+    // one year earlier) for things like the start population. to avoid
+    // changing downstream logic we do the shift only when building the labels.
     const labels = Array.from({ length: params.T }, (_, i) =>
-      formatCalendarYearFromSimulationYear(i + 1)
+      formatCalendarYearForChart(i + 1)
     );
 
     const populationData = {
@@ -910,7 +914,7 @@
     y = pdfAddParagraph(doc, `Simulatieduur: ${nf0.format(params.T)} jaren`, y, layout, { fontSize: 9.5, lineHeight: 12, spacingAfter: 4 });
     y = pdfAddParagraph(
       doc,
-      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het huidige seizoen (${new Date().getFullYear()})`,
+      `Aanname: De invoerparameter 'Startpopulatie' representeert gegevens van het vorige seizoen (${REFERENCE_SEASON_YEAR})`,
       y,
       layout,
       { fontSize: 9.3, lineHeight: 12, spacingAfter: 6 }
