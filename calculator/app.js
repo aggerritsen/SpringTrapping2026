@@ -21,7 +21,7 @@
     c: 300,
     d_max: 12,
     A: 30,
-    N0: 15,
+    N0: 12,
     R_max: 5,
     s: 0.95,
     p_passief: 0.3,
@@ -66,7 +66,7 @@
   const INPUT_RULES = {
     c: { min: 0, max: 1000, integer: true },
     d_max: { min: 2, max: 25, integer: true },
-    A: { min: 1, max: 150, integer: true },
+    A: { min: 1, max: 300, integer: true },
     N0: { min: 1, max: 500, integer: true },
     R_max: { min: 1.1, max: 10, integer: false },
     s: { min: 0.5, max: 0.99, integer: false },
@@ -124,6 +124,15 @@
 
   function formatCalendarYearFromSimulationYear(simulationYearIndex) {
     return String(calcCalendarYearFromSimulationYear(simulationYearIndex));
+  }
+
+  // chart labels should be based on the *current* calendar year rather than the
+  // reference season.  this helper is used only by `renderCharts` so that the
+  // underlying model still treats year‑1 as the base.
+  function formatCalendarYearForChart(simulationYearIndex) {
+    const yearIndex = Math.max(1, Math.round(Number(simulationYearIndex) || 1));
+    const currentYear = new Date().getFullYear();
+    return String(currentYear + yearIndex - 1);
   }
 
   function formatSaturationYear(value) {
@@ -234,7 +243,7 @@
     const warnings = [];
 
     if (p.A <= 0) messages.push("Oppervlakte (A) moet groter zijn dan 0.");
-    if (p.A > 150) messages.push("Oppervlakte (A) mag maximaal 150 zijn.");
+    if (p.A > 300) messages.push("Oppervlakte (A) mag maximaal 300 zijn.");
     if (p.N0 < 1) messages.push("Startpopulatie (N0) moet minimaal 1 zijn.");
     if (p.N0 > 500) messages.push("Startpopulatie (N0) mag maximaal 500 zijn.");
     if (p.R_max <= 1) warnings.push("R_max is ≤ 1: populatie groeit dan niet of krimpt.");
@@ -434,7 +443,13 @@
   }
 
   function renderCharts(results, params) {
-    const labels = Array.from({ length: params.T }, (_, i) => formatCalendarYearFromSimulationYear(i + 1));
+    // the first label should correspond to the current calendar year; the
+    // model calculations themselves still use REFERENCE_SEASON_YEAR (which is
+    // one year earlier) for things like the start population. to avoid
+    // changing downstream logic we do the shift only when building the labels.
+    const labels = Array.from({ length: params.T }, (_, i) =>
+      formatCalendarYearForChart(i + 1)
+    );
 
     const populationData = {
       labels,
