@@ -171,6 +171,7 @@
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
+    referrerPolicy: "strict-origin-when-cross-origin",
   }).addTo(map);
 
   map.setView([52.1, 5.1], 8); // NL default
