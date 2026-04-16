@@ -64,7 +64,7 @@
   ];
 
   const INPUT_RULES = {
-    c: { min: 0, max: 1000, integer: true },
+    c: { min: 0, max: 2500, integer: true },
     d_max: { min: 2, max: 25, integer: true },
     A: { min: 1, max: 300, integer: true },
     N0: { min: 1, max: 500, integer: true },
